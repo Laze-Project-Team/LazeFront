@@ -38,22 +38,30 @@ $(() => {
 		}
 	});
 
-	const adjustCanvasSize = () => {
+	const adjustCanvasSize = (direction: 'x' | 'y') => {
+		if (direction === 'x') {
+			(document.querySelector('.editor-console') as HTMLElement)!.style.height = (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
+		} else {
+			(document.querySelector('.editor-output') as HTMLElement)!.style.width = document.querySelector('.editor-console')!.clientWidth - (canvas.clientHeight * 16) / 9 + 'px';
+		}
 		return true;
 	};
+	setTimeout(() => {
+		adjustCanvasSize('x');
+	}, 100);
 
 	// リサイズ可能に
 	$('.explorer').resizable({
 		handleSelector: '.exp-spliter',
 		resizeHeight: false,
-		onDrag: adjustCanvasSize,
+		onDrag: () => adjustCanvasSize('x'),
 		onDragEnd: () => {
 			editor.layout();
 			return true;
 		},
 	});
 	$('.editor-console').resizable({
-		onDrag: adjustCanvasSize,
+		onDrag: () => adjustCanvasSize('y'),
 		onDragEnd: () => {
 			editor.layout();
 			return true;
@@ -63,13 +71,14 @@ $(() => {
 		resizeHeightFrom: 'top',
 	});
 	$('.editor-output').resizable({
+		onDrag: () => adjustCanvasSize('x'),
 		handleSelector: '.editor-output-spliter',
 		resizeHeight: false,
 	});
 
 	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-	canvas.width = 512;
-	canvas.height = 512;
+	canvas.width = 1280;
+	canvas.height = 720;
 
 	// アカウントのステータス更新
 	updateAccount();
@@ -80,6 +89,11 @@ $(() => {
 		logConsole(result.logValue, result.style);
 	});
 });
+
+// window閉じる時の警告
+window.onbeforeunload = function (e) {
+	return '';
+};
 
 const editorPrepared = setInterval(() => {
 	if (document.getElementsByClassName('monaco-editor')) {
