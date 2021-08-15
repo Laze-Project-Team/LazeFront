@@ -38,7 +38,12 @@ $(() => {
 		}
 	});
 
-	const adjustCanvasSize = () => {
+	const adjustCanvasSize = (direction: 'x' | 'y') => {
+		if (direction === 'x') {
+			(document.querySelector('.editor-console') as HTMLElement)!.style.height = (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
+		} else {
+			(document.querySelector('.editor-graphics') as HTMLElement)!.style.width = (canvas.clientHeight * 16) / 9 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
+		}
 		return true;
 	};
 
@@ -46,14 +51,14 @@ $(() => {
 	$('.explorer').resizable({
 		handleSelector: '.exp-spliter',
 		resizeHeight: false,
-		onDrag: adjustCanvasSize,
+		onDrag: () => adjustCanvasSize('x'),
 		onDragEnd: () => {
 			editor.layout();
 			return true;
 		},
 	});
 	$('.editor-console').resizable({
-		onDrag: adjustCanvasSize,
+		onDrag: () => adjustCanvasSize('y'),
 		onDragEnd: () => {
 			editor.layout();
 			return true;
@@ -63,6 +68,7 @@ $(() => {
 		resizeHeightFrom: 'top',
 	});
 	$('.editor-output').resizable({
+		onDrag: () => adjustCanvasSize('x'),
 		handleSelector: '.editor-output-spliter',
 		resizeHeight: false,
 	});
