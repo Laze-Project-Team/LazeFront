@@ -1,6 +1,7 @@
 import editor from './monaco/src/js/main';
 import * as monaco from 'monaco-editor';
 import moment from 'moment';
+import io from 'socket.io-client';
 
 // セーブ
 editor.addAction({
@@ -12,7 +13,7 @@ editor.addAction({
 });
 
 // Socket.IO
-const socket: SocketIOClient.Socket = io.connect('');
+const socket = io('');
 
 $(() => {
 	// ボタン
