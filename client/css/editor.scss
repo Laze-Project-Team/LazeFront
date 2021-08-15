@@ -811,12 +811,13 @@ div.explorer {
 	left: 0;
 	z-index: 10;
 
-	background-color: whitesmoke;
+	background-color: #1e1e1e;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
 	p {
+		color: #d4d4d4;
 		font-size: 2rem;
 	}
 
@@ -844,7 +845,7 @@ div.explorer {
 	.loader:before {
 		width: 5.2em;
 		height: 10.2em;
-		background: whitesmoke;
+		background-color: #1e1e1e;
 		border-radius: 10.2em 0 0 10.2em;
 		top: -0.1em;
 		left: -0.1em;
@@ -854,7 +855,7 @@ div.explorer {
 	.loader:after {
 		width: 5.2em;
 		height: 10.2em;
-		background: whitesmoke;
+		background-color: #1e1e1e;
 		border-radius: 0 10.2em 10.2em 0;
 		top: -0.1em;
 		left: 4.9em;
