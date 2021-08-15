@@ -125,6 +125,7 @@ function getVersion(): string {
 let currentHref = '';
 function requestMarkdown(href: string, hash?: string) {
 	doc!.innerHTML = loadingMessage;
+	document.querySelector('.document-outline > .content')!.innerHTML = '';
 	// @ts-ignore
 	fetch(`/docs/${getVersion()}${href}`)
 		.then((res) => (res.status == 200 ? res.text() : null))
