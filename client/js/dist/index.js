@@ -10,13 +10,13 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./client/js/index.ts":
-/*!****************************!*\
-  !*** ./client/js/index.ts ***!
-  \****************************/
+/***/ "./client/client/js/index.ts":
+/*!***********************************!*\
+  !*** ./client/client/js/index.ts ***!
+  \***********************************/
 /***/ (() => {
 
-eval("\r\n// Materialize Init\r\nvar instances = M.Sidenav.init(document.querySelectorAll('.sidenav'), {\r\n    edge: 'right',\r\n    inDuration: 100,\r\n    outDuration: 100,\r\n});\r\n// スムーススクロール\r\ndocument.querySelectorAll('a[href^=\"#\"]').forEach(function (anchor) {\r\n    anchor.addEventListener('click', function (e) {\r\n        e.preventDefault();\r\n        // @ts-ignore\r\n        document.querySelector(this.getAttribute('href')).scrollIntoView({\r\n            behavior: 'smooth',\r\n        });\r\n        // ページ内リンクでサイドバーオーバーレイを閉じる\r\n        document.querySelectorAll('.sidenav-overlay').forEach(function (element) {\r\n            // @ts-ignore\r\n            element.click();\r\n            console.log('clicked');\r\n        });\r\n    });\r\n});\r\n\n\n//# sourceURL=webpack://lazefront/./client/js/index.ts?");
+eval("\r\n// Materialize Init\r\nvar instances = M.Sidenav.init(document.querySelectorAll('.sidenav'), {\r\n    edge: 'right',\r\n    inDuration: 100,\r\n    outDuration: 100,\r\n});\r\n// スムーススクロール\r\ndocument.querySelectorAll('a[href^=\"#\"]').forEach(function (anchor) {\r\n    anchor.addEventListener('click', function (e) {\r\n        e.preventDefault();\r\n        // @ts-ignore\r\n        document.querySelector(this.getAttribute('href')).scrollIntoView({\r\n            behavior: 'smooth',\r\n        });\r\n        // ページ内リンクでサイドバーオーバーレイを閉じる\r\n        document.querySelectorAll('.sidenav-overlay').forEach(function (element) {\r\n            // @ts-ignore\r\n            element.click();\r\n            console.log('clicked');\r\n        });\r\n    });\r\n});\r\n\n\n//# sourceURL=webpack://laze-compiler-web/./client/client/js/index.ts?");
 
 /***/ })
 
@@ -27,7 +27,7 @@ eval("\r\n// Materialize Init\r\nvar instances = M.Sidenav.init(document.querySe
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./client/js/index.ts"]();
+/******/ 	__webpack_modules__["./client/client/js/index.ts"]();
 /******/ 	
 /******/ })()
 ;
