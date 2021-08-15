@@ -351,7 +351,9 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const loopFunc = instance.exports.loop as CallableFunction;
 
 				infoObject.size = memorySizeFunc();
+				console.log(infoObject.size);
 				mainFunc();
+				console.log(infoObject.size);
 				const draw = () => {
 					gl?.viewport(0, 0, 512, 512);
 					loopFunc();
