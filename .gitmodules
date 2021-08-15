@@ -1,0 +1,3 @@
+[submodule "client/js/monaco"]
+	path = client/js/monaco
+	url = https://github.com/Laze-Project-Team/LazeEditor
