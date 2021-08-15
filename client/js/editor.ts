@@ -68,8 +68,8 @@ $(() => {
 	});
 
 	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-	canvas.width = 512;
-	canvas.height = 512;
+	canvas.width = 1280;
+	canvas.height = 720;
 
 	// アカウントのステータス更新
 	updateAccount();
