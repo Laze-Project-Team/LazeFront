@@ -42,7 +42,7 @@ $(() => {
 		if (direction === 'x') {
 			(document.querySelector('.editor-console') as HTMLElement)!.style.height = (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
 		} else {
-			(document.querySelector('.editor-graphics') as HTMLElement)!.style.width = (canvas.clientHeight * 16) / 9 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
+			(document.querySelector('.editor-output') as HTMLElement)!.style.width = document.querySelector('.editor-console')!.clientWidth - (canvas.clientHeight * 16) / 9 + 'px';
 		}
 		return true;
 	};
