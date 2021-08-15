@@ -1,0 +1,47 @@
+@import 'common';
+@import 'form';
+
+body {
+	background-color: $color-bg;
+}
+
+main {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 0 10px;
+	box-sizing: content-box;
+
+	.title {
+		margin: 20px 0 30px 0;
+
+		h2 {
+			text-align: center;
+		}
+	}
+
+	.err {
+		display: none;
+		padding: 10px;
+		margin-bottom: 20px;
+		border-radius: 5px;
+		@include error;
+
+		p {
+			display: flex;
+			margin: 0;
+
+			i {
+				margin-left: auto;
+				color: #c00;
+				cursor: pointer;
+			}
+		}
+	}
+
+	.login-field {
+		background-color: rgb(243, 243, 243);
+		border: solid rgb(224, 224, 224) 1px;
+		border-radius: 5px;
+		padding: 20px;
+	}
+}

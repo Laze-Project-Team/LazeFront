@@ -1,0 +1,23 @@
+@import 'common';
+
+main, .message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.message {
+	flex-direction: column;
+
+	h1 {
+		font-size: 10rem;
+		color: $color-accent;
+	}
+	h2 {
+		font-size: 3rem;
+		color: $color-accent;
+	}
+	p {
+		font-size: 1.5rem;
+	}
+}

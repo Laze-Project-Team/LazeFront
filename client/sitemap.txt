@@ -1,0 +1,10 @@
+https://laze.ddns.net/
+https://laze.ddns.net/privacy
+https://laze.ddns.net/editor
+https://laze.ddns.net/docs
+https://laze.ddns.net/docs?version=v1-0-0&href=/first
+https://laze.ddns.net/docs?version=v1-0-0&href=/tutorial
+https://laze.ddns.net/docs?version=v1-0-0&href=/func/index
+https://laze.ddns.net/docs?version=v1-0-0&href=/func/control
+https://laze.ddns.net/docs?version=v1-0-0&href=/func/operator
+https://laze.ddns.net/docs?version=v1-0-0&href=/func/class

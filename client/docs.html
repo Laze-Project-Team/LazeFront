@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta content="プログラミング言語Lazeのドキュメンテーションです。Lazeの基本的な使い方から、関数のリファレンスまで対応しています。" name="description" />
+		<meta property="og:title" content="Laze Documentation - Laze" />
+		<meta property="og:description" content="プログラミング言語Lazeのドキュメンテーションです。Lazeの基本的な使い方から、関数のリファレンスまで対応しています。" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="https://laze.ddns.net/docs/" />
+		<meta property="og:image" content="https://laze.ddns.net/assets/icons/logo.png" />
+		<meta property="og:site_name" content="Laze Documentation" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Google Tag Manager -->
+		<script>
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', 'GTM-PSMWQLS');
+		</script>
+		<!-- End Google Tag Manager -->
+
+		<title>Laze Documentation - Laze</title>
+
+		<!-- フォント -->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+		<!-- Materialize -->
+		<link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+		<!-- ファビコン -->
+		<link rel="shortcut icon" href="/assets/icons/logo.png" type="image/x-icon" />
+
+		<!-- Font Awesome -->
+		<script src="https://kit.fontawesome.com/b436670353.js" crossorigin="anonymous"></script>
+
+		<!-- My Code -->
+		<link rel="stylesheet" href="/css/docs.css" />
+	</head>
+
+	<body>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSMWQLS" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+
+		<main class="fluid-container">
+			<ul id="index-list" class="sidenav">
+				<li class="header">目次</li>
+				<li class="content">
+					<ul class="collapsible index-list"></ul>
+				</li>
+			</ul>
+			<div class="row responsive-header hide-on-large-only hide-on-extra-large-only">
+				<a href="#" data-target="index-list" id="index-list-trigger" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+				<div class="tap-target" data-target="index-list-trigger">
+					<div class="tap-target-content">
+						<h5>メニューボタン</h5>
+						<p>ここをクリックするとそれぞれの機能のドキュメンテーションの一覧が表示できます</p>
+						<a id="close-discovery">閉じる</a><a id="disable-discovery">再度表示しない</a>
+					</div>
+				</div>
+
+				<a href="/" class="logo">
+					<img src="/assets/icons/logo.png" alt="" />
+					<span>Laze</span>
+				</a>
+
+				<div class="versions-wrapper">
+					<div class="version-select"></div>
+				</div>
+			</div>
+			<div class="row main">
+				<div class="sidebar col hide-on-med-and-down">
+					<div class="versions">
+						<a href="/">
+							<img src="/assets/icons/logo_caption.png" alt="Laze" />
+						</a>
+
+						<div class="version-select col">
+							<div class="input-field">
+								<select>
+									<option value="v1-0-0">v1.0.0</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<ul class="collapsible index-list">
+						<li class="content">
+							<a href="/first" class="mdlink">はじめに</a>
+						</li>
+						<li>
+							<div class="collapsible-header">チュートリアル<i class="material-icons">keyboard_arrow_right</i></div>
+							<div class="collapsible-body">
+								<div class="collection">
+									<a href="/tutorial/tutorial" class="mdlink collection-item">最初のチュートリアル</a>
+									<a href="/tutorial/3d" class="mdlink collection-item">3Dののチュートリアル</a>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">標準機能<i class="material-icons">keyboard_arrow_right</i></div>
+							<div class="collapsible-body">
+								<div class="collection">
+									<a href="/func/index" class="mdlink collection-item">標準機能とは</a>
+									<a href="/func/control" class="mdlink collection-item">制御文</a>
+									<a href="/func/operator" class="mdlink collection-item">演算子</a>
+									<a href="/func/class" class="mdlink collection-item">クラス</a>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">標準ライブラリ<i class="material-icons">keyboard_arrow_right</i></div>
+							<div class="collapsible-body">
+								<div class="collection">
+									<a href="/lib/index" class="mdlink collection-item">標準ライブラリとは</a>
+									<ul class="collapsible">
+										<li>
+											<div class="collapsible-header">3Dライブラリ<i class="material-icons">keyboard_arrow_right</i></div>
+											<div class="collapsible-body">
+												<div class="collection">
+													<a href="/lib/3d/3d" class="mdlink collection-item">3Dライブラリ</a>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="collapsible-header">外部ライブラリ<i class="material-icons">keyboard_arrow_right</i></div>
+							<div class="collapsible-body">
+								<div class="collection">
+									<a href="/exlib/index" class="mdlink collection-item">外部ライブラリとは</a>
+									<a href="/exlib/webgl" class="mdlink collection-item">何かしら</a>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="main-content col">
+					<div class="edit coming-soon">
+						<a class="btn-flat right">このページを編集する（準備中）</a>
+					</div>
+					<div id="document-content"></div>
+
+					<div class="document-outline hide-on-small-and-down">
+						<div class="header"><span>コンテンツ</span></div>
+						<div class="content"></div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- Marked -->
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+		<!-- Materialize -->
+		<script type="text/javascript" src="/js/materialize.min.js"></script>
+
+		<!-- My Code -->
+		<script src="/js/dist/docs.js"></script>
+	</body>
+</html>

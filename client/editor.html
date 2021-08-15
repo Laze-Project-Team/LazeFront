@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex" />
+
+		<title>Laze Editor - Laze</title>
+
+		<!-- ファビコン -->
+		<link rel="shortcut icon" href="/assets/icons/logo.png" type="image/x-icon" />
+
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<!-- jQuery Resizable -->
+		<script src="/jquery-resizable.js"></script>
+
+		<!-- Socket.IO -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+
+		<!-- Materialize -->
+		<link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+		<!-- My Code -->
+		<link rel="stylesheet" href="/css/editor.css" />
+	</head>
+
+	<body>
+		<main class="row">
+			<!-- エクスプローラー -->
+			<div class="explorer main-content col">
+				<div class="exp-header row">
+					<span id="project-name-label" class="col">Laze</span>
+					<button id="btn-newfile" class="col" title="新規ファイル">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#new-file"></use>
+						</svg>
+					</button>
+				</div>
+
+				<div class="exp-view row" id="exp-view">
+					<ul></ul>
+				</div>
+			</div>
+			<div class="exp-spliter spliter h-spliter col"></div>
+
+			<!-- エディター -->
+			<div class="editor main-content col">
+				<div class="editor-btns">
+					<button class="btn-editor btn-compile" id="btn-save">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#save"></use>
+						</svg>
+						<span>セーブ</span>
+					</button>
+					<button class="btn-editor btn-compile" id="btn-compile">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#check"></use>
+						</svg>
+						<span>コンパイル / 実行</span>
+					</button>
+					<button class="btn-editor btn-sample" id="btn-sample">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#load-project"></use>
+						</svg>
+						<span>サンプルを読み込み</span>
+					</button>
+				</div>
+
+				<div class="editor-main">
+					<div id="editor"></div>
+					<div id="editor-cover">
+						<div class="wrapper">
+							<div class="logo">
+								<img src="/assets/icons/logo_gray.png" alt="Lazeロゴ" width="128" />
+							</div>
+							<div class="tips">
+								<p>何も開かれていません</p>
+								<p>左のエクスプローラーから開きたいファイルをクリックしましょう</p>
+								<p>または、上のサンプルを読み込みボタンを押して気になるサンプルを試してみましょう</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="spliter console-spliter v-spliter"></div>
+				<div class="editor-console">
+					<div class="editor-output editor-output-pane">
+						<div class="editor-output-label console-label">
+							<p>出力</p>
+						</div>
+
+						<div class="editor-output-aria" id="editor-console"></div>
+					</div>
+
+					<div class="spliter editor-output-spliter h-spliter"></div>
+
+					<div class="editor-graphics editor-output-pane">
+						<div class="editor-output-label graphics-label">
+							<p>描画エリア</p>
+						</div>
+
+						<div class="editor-output-aria" id="editor-graphics">
+							<canvas id="output-canvas"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<footer>
+			<div class="acknowledgments">
+				<span>Made with Monaco Editor</span>
+			</div>
+			<div class="current-file nofile">
+				<span id="footer-filename"></span>
+				<button id="footer-fileclose">
+					<svg viewBox="0 0 64 64" class="close">
+						<use xlink:href="/assets/icons/icons.svg#cross"></use>
+					</svg>
+					<svg viewBox="0 0 64 64" class="unsaved">
+						<use xlink:href="/assets/icons/icons.svg#circle"></use>
+					</svg>
+				</button>
+			</div>
+		</footer>
+
+		<div id="modal">
+			<form id="modal-form">
+				<div class="title"></div>
+				<div class="description"></div>
+				<div class="fields"></div>
+				<div class="buttons">
+					<button id="modal-cancel" type="button">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#cross"></use>
+						</svg>
+						<span>キャンセル</span>
+					</button>
+					<button id="modal-enter" type="submit">
+						<svg viewBox="0 0 64 64">
+							<use xlink:href="/assets/icons/icons.svg#check"></use>
+						</svg>
+						<span>決定</span>
+					</button>
+				</div>
+			</form>
+		</div>
+		<div id="modal-back"></div>
+
+		<div id="overlay-create-project" class="overlay">
+			<div class="overlay-box">
+				<form id="setname">
+					<label for="project-name">作成するプロジェクトの名前を決めてください</label>
+					<input type="text" name="project-name" id="project-name" autofocus />
+					<small id="project-name-warning" class="text-danger"></small>
+					<div class="buttons">
+						<button type="button" id="setname-cancel" class="btn btn-secondary">キャンセル</button>
+						<button type="submit" id="setname-submit" class="btn btn-primary">決定</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="overlay-load-project" class="overlay">
+			<div class="overlay-box">
+				<form id="selectname">
+					<label for="project-selecter">ロードするプロジェクトを選択してください</label>
+					<select name="project-selecter" id="project-selecter"></select>
+					<div class="buttons">
+						<button type="button" id="selectname-cancel" class="btn btn-secondary">キャンセル</button>
+						<button type="submit" id="selectname-submit" class="btn btn-primary">決定</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div id="popup-message"></div>
+
+		<div id="loading-screen">
+			<div class="message">
+				<div class="loader"></div>
+				<p>Building your editor...</p>
+			</div>
+		</div>
+
+		<div id="contextmenu"></div>
+
+		<!-- Materialize -->
+		<script type="text/javascript" src="/js/materialize.min.js"></script>
+
+		<!-- My Code -->
+		<script src="/js/dist/editor.js"></script>
+	</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex" />
+
+		<title>サインアップ - Laze</title>
+
+		<!-- ファビコン -->
+		<link rel="shortcut icon" href="/assets/icons/logo.png" type="image/x-icon" />
+
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+		<!-- Socket.IO -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+
+		<!-- My Code -->
+		<link rel="stylesheet" href="/css/login.css" />
+		<script src="/js/register.js"></script>
+	</head>
+
+	<body>
+		<main>
+			<div class="title">
+				<h2>アカウント作成</h2>
+			</div>
+
+			<div class="err">
+				<p>
+					<span>ユーザー名またはパスワードが間違っています</span>
+					<i class="bi bi-x"></i>
+				</p>
+			</div>
+
+			<div class="login-field">
+				<form id="login-field" action="/register" method="POST">
+					<div class="form-group required">
+						<label for="id">ユーザー名</label>
+						<input type="text" class="form-control" name="id" id="id" placeholder="Username" required />
+						<div class="validations">
+							<i class="bi bi-check2 text-success valid"></i>
+							<i class="bi bi-exclamation-triangle-fill text-danger invalid"></i>
+						</div>
+						<span class="feedback"></span>
+						<small class="note">英大文字、英小文字、数字、アンダーバーのみ使用できます</small>
+					</div>
+
+					<div class="form-group">
+						<label for="username">表示名</label>
+						<input type="text" class="form-control" name="username" id="username" placeholder="" />
+					</div>
+
+					<div class="form-group required">
+						<label for="email">Eメールアドレス</label>
+						<input type="email" class="form-control" name="email" id="email" placeholder="Email address" required />
+						<div class="validations">
+							<i class="bi bi-check2 text-success valid"></i>
+							<i class="bi bi-exclamation-triangle-fill text-danger invalid"></i>
+						</div>
+						<span class="feedback"></span>
+					</div>
+
+					<div class="form-group required">
+						<label for="password">パスワード</label>
+						<input type="password" class="form-control" name="password" id="password" placeholder="Password" required />
+						<div class="validations">
+							<i class="bi bi-check2 text-success valid"></i>
+							<i class="bi bi-exclamation-triangle-fill text-danger invalid"></i>
+						</div>
+						<span class="feedback"></span>
+						<small class="note">8文字以上でかつ大文字と数字をそれぞれ1文字以上含んでいる必要があります</small>
+					</div>
+
+					<div class="form-group required">
+						<label for="password-check">パスワードの確認</label>
+						<input type="password" class="form-control" name="password_check" id="password-check" placeholder="Password" required />
+						<div class="validations">
+							<i class="bi bi-check2 text-success valid"></i>
+							<i class="bi bi-exclamation-triangle-fill text-danger invalid"></i>
+						</div>
+						<span class="feedback"></span>
+					</div>
+
+					<button type="submit" class="btn btn-primary w-100" id="register-submit" disabled>アカウント作成</button>
+
+					<div class="suggestions">
+						<span>アカウントをお持ちの方は</span>
+						<a class="login">ログイン</a>
+					</div>
+				</form>
+			</div>
+		</main>
+
+		<!-- Bootstrap -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist//css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist//js/bootstrap.bundle.min.js"
+			integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+			crossorigin="anonymous"
+		></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
+	</body>
+</html>

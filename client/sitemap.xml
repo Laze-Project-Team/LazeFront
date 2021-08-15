@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<url>
+  <loc>https://laze.ddns.net/</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/privacy</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/editor</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/first</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/tutorial</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/func/index</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/func/control</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/func/operator</loc>
+</url>
+<url>
+  <loc>https://laze.ddns.net/docs/?version=v1-0-0&amp;href=/func/class</loc>
+</url>
+
+</urlset>

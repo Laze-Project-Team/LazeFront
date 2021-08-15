@@ -1,0 +1,123 @@
+$color-accent: rgb(34, 148, 201);
+$color-lines: rgb(141, 141, 141);
+$color-bg: rgb(216, 216, 216);
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+		'Noto Color Emoji';
+}
+
+main {
+	flex: 1;
+}
+
+// ボタン
+.btn.btn-primary {
+	background-color: $color-accent;
+	border-color: darken($color-accent, 10%);
+	color: white;
+
+	&:hover {
+		background-color: darken($color-accent, 5%);
+		border-color: darken($color-accent, 10%);
+	}
+
+	&:focus {
+		background-color: darken($color-accent, 5%);
+		border-color: darken($color-accent, 10%);
+		box-shadow: 0 0 0 0.25rem rgba($color-accent, 0.5);
+	}
+
+	&:disabled {
+		background-color: lighten($color-accent, 5%);
+		border-color: $color-accent;
+	}
+}
+.btn.btn-secondary {
+	background-color: $color-lines;
+	border: solid darken($color-lines, 10%) 2px;
+	color: white;
+
+	&:hover {
+		background-color: darken($color-lines, 10%);
+		border: solid darken($color-lines, 20%) 2px;
+	}
+	&:focus {
+		background-color: darken($color-lines, 10%);
+		border: solid darken($color-lines, 20%) 2px;
+	}
+}
+
+@mixin hover {
+	box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+}
+
+@mixin text-overflow() {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+// ドロップダウン
+ul.dropdown-menu {
+	border: none;
+	background-color: rgb(253, 253, 253);
+	padding: 2px 0 5px 0;
+	@include hover();
+
+	.dropdown-header {
+		color: inherit;
+	}
+
+	.dropdown-item {
+		padding: 0;
+
+		&:hover {
+			background-color: $color-accent;
+			color: whitesmoke;
+		}
+
+		.dropdown-content {
+			padding: 5px 10px;
+			display: inline-block;
+			width: 100%;
+			color: inherit;
+			text-decoration: inherit;
+			font-size: 0.9rem;
+		}
+	}
+}
+
+// 変数の定義
+// min-width
+$breakpoint-up: (
+	'sm': 'screen and (min-width: 400px)',
+	'md': 'screen and (min-width: 600px)',
+	'lg': 'screen and (min-width: 993px)',
+	'xl': 'screen and (min-width: 1200px)',
+) !default;
+
+// max-width
+$breakpoint-down: (
+	'sm': 'screen and (max-width: 399px)',
+	'md': 'screen and (max-width: 599px)',
+	'lg': 'screen and (max-width: 992px)',
+	'xl': 'screen and (max-width: 1199px)',
+) !default;
+
+// @mixinの定義
+@mixin mq-up($breakpoint: md) {
+	@media #{map-get($breakpoint-up, $breakpoint)} {
+		@content;
+	}
+}
+
+@mixin mq-down($breakpoint: md) {
+	@media #{map-get($breakpoint-down, $breakpoint)} {
+		@content;
+	}
+}

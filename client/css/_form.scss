@@ -1,0 +1,117 @@
+@mixin error {
+	background-color: #fdd;
+	border: solid #f99 1px;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+
+	.form-group {
+		margin: 10px 0 15px 0;
+
+		&::after {
+			display: block;
+		}
+
+		&.required label::after {
+			content: '*';
+			color: #dc3545;
+			margin-left: 5px;
+		}
+
+		&.invalid {
+			label, .feedback  {
+				color: #dc3545;
+			}
+			i.invalid {
+				display: inline;
+			}
+			input {
+				border: solid #dc3545 1px;
+
+				&:focus + .feedback:invalid {
+					display: block
+				}
+			}
+
+			.feedback {
+				@include error();
+
+				&::before {
+					border-bottom-color: #f99;
+				}
+				&::after {
+					border-bottom-color: #fdd;
+				}
+			}
+		}
+		&.valid {
+			i.valid {
+				display: inline;
+			}
+			label {
+				color: #198754;
+			}
+			input {
+				border: solid #198754 1px;
+			}
+		}
+
+		input::placeholder {
+			color: rgb(187, 187, 187);
+		}
+		
+		.validations {
+			display: flex;
+			flex-direction: row-reverse;
+
+			i {
+				position: absolute;
+				display: none;
+				margin: -30px 10px 0 0;
+
+				&::before {
+					font-size: 1.5rem;
+				}
+			}
+		}
+
+		.feedback {
+			display: none;
+			position: absolute;
+			margin-top: 5px;
+			border-radius: 3px;
+			padding: 0 5px;
+			z-index: 1;
+			@include hover();
+
+			&::before, &::after {
+				content: '';
+				position: absolute;
+				left: 10px;
+				bottom: calc(100% + 1px);
+				border: solid transparent 5px;
+			}
+			&::after {
+				left: 10px;
+				bottom: 100%;
+				border: solid transparent 5px;
+			}
+		}
+
+		.note {
+			display: block;
+			margin-left: 5px;
+		}
+	}
+	
+	button {
+		margin: 10px 0 10px 0;
+	}
+
+	.suggestions {
+		display: inline-block;
+		margin: 0 auto;
+	}
+}
