@@ -81,6 +81,11 @@ $(() => {
 	});
 });
 
+// window閉じる時の警告
+window.onbeforeunload = function (e) {
+	return '';
+};
+
 const editorPrepared = setInterval(() => {
 	if (document.getElementsByClassName('monaco-editor')) {
 		document.getElementById('loading-screen')!.style.display = 'none';
