@@ -46,6 +46,9 @@ $(() => {
 		}
 		return true;
 	};
+	setTimeout(() => {
+		adjustCanvasSize('x');
+	}, 100);
 
 	// リサイズ可能に
 	$('.explorer').resizable({
