@@ -355,7 +355,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				mainFunc();
 				console.log(infoObject.size);
 				const draw = () => {
-					gl?.viewport(0, 0, 1280, 720);
+					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
 				};
 				if (instance.exports.loop) setInterval(draw, 1000 / 60);
