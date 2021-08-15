@@ -213,6 +213,8 @@ function highlight(code: string) {
 			indexOffset += 32;
 		}
 
+		classes.push('シーン', 'ベクトル3D', 'モデル', '配列', '行列4x4', '文字列', 'カメラ');
+
 		// 型書き換え
 		let tokenPatternDefineEdit = tokenPatternDefine;
 		tokenPatternDefineEdit.types = tokenPatternDefine.types.replace(tokens.typeKeywords!.join('|'), tokens.typeKeywords!.concat(classes).join('|'));
