@@ -123,7 +123,7 @@ function getVersion(): string {
 
 // Markdownをサーバーからリクエスト
 let currentHref = '';
-function requestMarkdown(href: string, hash?: string) {
+function requestMarkdown(href: string, hash?: string, pop: boolean = false) {
 	doc!.innerHTML = loadingMessage;
 	document.querySelector('.document-outline > .content')!.innerHTML = '';
 	// @ts-ignore
@@ -145,8 +145,10 @@ function requestMarkdown(href: string, hash?: string) {
 			}
 
 			// query変更
-			const newurl = location.origin + window.location.pathname + `?version=${getVersion()}&href=${currentHref}`;
-			history.pushState({ path: newurl }, '', newurl);
+			if (!pop) {
+				const newurl = location.origin + window.location.pathname + `?version=${getVersion()}&href=${currentHref}`;
+				history.pushState({ path: newurl }, '', newurl);
+			}
 
 			// active変更
 			document.querySelectorAll('.actived').forEach((actived) => actived.classList.remove('actived'));
@@ -161,7 +163,7 @@ function requestMarkdown(href: string, hash?: string) {
 		});
 }
 
-function loadDocumentation(location: Location = window.location) {
+function loadDocumentation(location: Location = window.location, pop: boolean = false) {
 	if (location.search) {
 		const queries = location.search.substr(1).split('&');
 		const version = queries.filter((query) => query.startsWith('version='));
@@ -178,12 +180,12 @@ function loadDocumentation(location: Location = window.location) {
 		}
 		const href = queries.filter((query) => query.startsWith('href='));
 		if (href.length > 0) {
-			requestMarkdown(href[0].replace('href=', ''), location.hash ? location.hash.substr(1) : '');
+			requestMarkdown(href[0].replace('href=', ''), location.hash ? location.hash.substr(1) : '', pop);
 		} else {
-			requestMarkdown('/first');
+			requestMarkdown('/first', undefined, pop);
 		}
 	} else {
-		requestMarkdown('/first');
+		requestMarkdown('/first', undefined, pop);
 	}
 }
 loadDocumentation();
@@ -265,7 +267,7 @@ function parseMarkdown(content: string) {
 // 進む・戻る時に更新
 window.onpopstate = (e: PopStateEvent) => {
 	// @ts-ignore
-	loadDocumentation(e.currentTarget!.location);
+	loadDocumentation(e.currentTarget!.location, true);
 };
 
 // lg未満ならdiscoveryを表示
