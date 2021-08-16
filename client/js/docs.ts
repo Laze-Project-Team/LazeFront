@@ -161,7 +161,7 @@ function requestMarkdown(href: string, hash?: string) {
 		});
 }
 
-function loadDocumentation() {
+function loadDocumentation(location: Location = window.location) {
 	if (location.search) {
 		const queries = location.search.substr(1).split('&');
 		const version = queries.filter((query) => query.startsWith('version='));
@@ -263,12 +263,10 @@ function parseMarkdown(content: string) {
 }
 
 // 進む・戻る時に更新
-window.addEventListener('load', () => {
-	const perfEntries = performance.getEntriesByType('navigation');
-	perfEntries.forEach((pe) => {
-		if (pe.type == 'back_forward') loadDocumentation();
-	});
-});
+window.onpopstate = (e: PopStateEvent) => {
+	// @ts-ignore
+	loadDocumentation(e.currentTarget!.location);
+};
 
 // lg未満ならdiscoveryを表示
 if (!localStorage.getItem('disableMenuDiscovery')) {
