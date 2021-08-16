@@ -243,6 +243,7 @@ ul.collapsible.index-list {
 			text-align: center;
 			margin: 0 0 0 auto;
 			transition: 0.2s;
+			line-height: 36px;
 
 			&.open {
 				transform: rotate(90deg);
@@ -261,7 +262,7 @@ ul.collapsible.index-list {
 
 	.collapsible-header,
 	.content a {
-		padding: 0.5rem 1rem;
+		padding: 0 1rem;
 	}
 }
 
