@@ -1,5 +1,4 @@
 let importObject;
-const memory = new WebAssembly.Memory({ initial: 17 });
 let mouseX = 0.0, mouseY = 0.0;
 //WebGLProgram
 let webglPrograms = [];
@@ -9,7 +8,7 @@ let webglShaders = [];
 let webglBuffers = [];
 let webglUniformLoc = [];
 
-export default function(gl, pressedKeys, info, logConsole){
+export default function(gl, pressedKeys, info, logConsole, memory){
     function initShaderProgram(gl, vsSource, fsSource) {
       const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
       const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);

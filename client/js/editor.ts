@@ -259,10 +259,10 @@ function updatePosition(e: MouseEvent) {
 
 // @ts-ignore
 import importObjectFunc from './importObject.js';
-
+let memory = new WebAssembly.Memory({ initial: 17 });
 let gl = canvas.getContext('webgl2');
-let importObject = importObjectFunc(gl, pressedKeys, infoObject, logConsole).importObject;
-const initShaderProgram = importObjectFunc(gl, pressedKeys, infoObject, logConsole).initShaderProgram;
+let importObject = importObjectFunc(gl, pressedKeys, infoObject, logConsole, memory).importObject;
+const initShaderProgram = importObjectFunc(gl, pressedKeys, infoObject, logConsole, memory).initShaderProgram;
 const vsSource = ` #version 300 es
   layout (location = 0) in vec3 aVertexPosition;
   layout (location = 1) in vec3 aVertexNormal;
@@ -335,6 +335,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 			.then((response) => {
 				canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
 				gl = canvas.getContext('webgl2');
+				memory = new WebAssembly.Memory({ initial: 17 });
 				return response.arrayBuffer();
 			})
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
