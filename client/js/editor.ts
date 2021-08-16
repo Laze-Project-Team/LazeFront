@@ -424,6 +424,7 @@ let importObject =  {
 	  createBuffer: function()
 	  {
 		webglBuffers.push((gl!.createBuffer())!);
+		console.log(webglBuffers.length - 1);
 		return webglBuffers.length - 1;
 	  },
 	  bindBuffer: function(i:number, j:number)
@@ -455,7 +456,6 @@ let importObject =  {
 		var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
 		bytes = bytes.filter(element => element != 0);
 		var string = new TextDecoder('utf-8').decode(bytes);
-		console.log(8989998989, string);
 		webglUniformLoc.push((gl!.getUniformLocation(webglPrograms[i], string))!);
 		return webglUniformLoc.length - 1;
 	  },
@@ -622,6 +622,8 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 		logConsole('---------- START ----------');
 		fetch(result.wasm)
 			.then((response) => {
+				webglPrograms = [];
+				webglShaders = [];
 				webglBuffers = [];
 				webglUniformLoc = [];
 				return response.arrayBuffer();
@@ -638,9 +640,9 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const memorySizeFunc = instance.exports.memorySize as CallableFunction;
 				const mainFunc = instance.exports.main as CallableFunction;
 				const loopFunc = instance.exports.loop as CallableFunction;
-				console.log(webglBuffers);
 
 				memorySize = memorySizeFunc();
+				console.log(webglPrograms)
 				mainFunc();
 				const draw = () => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
