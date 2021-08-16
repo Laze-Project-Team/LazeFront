@@ -622,7 +622,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 		logConsole('---------- START ----------');
 		fetch(result.wasm)
 			.then((response) => {
-				// importObject.js.mem = new WebAssembly.Memory({initial: 17});
+				memory = new WebAssembly.Memory({initial: 17});
 				return response.arrayBuffer();
 			})
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
