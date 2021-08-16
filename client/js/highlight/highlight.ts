@@ -4,6 +4,7 @@ const jaKeywordList = {
 		false: '偽',
 		function: '関数',
 		class: 'クラス',
+		template: '型',
 	},
 	functions: {
 		loadJS: 'js読み込み',
@@ -69,6 +70,7 @@ const tokenPatternDefine = {
 };
 const tokenPatterns = {
 	function: new RegExp(`${tokenPatternDefine.types}?(${jaKeywordList.keywords.function}${tokens.colon})?(${tokenPatternDefine.name})(?=\\s*[\\(（])`, 'g'),
+	template: new RegExp(`${jaKeywordList.keywords.template}\\s*([<＜]\\s*(${tokenPatternDefine.name})\\s*[>＞])\\s*${tokens.colon}`, 'g'),
 	class: new RegExp(`${jaKeywordList.keywords.class}${tokens.colon}(${tokenPatternDefine.name})`, 'g'),
 	keyword: new RegExp(`[${tokens.char}][${tokens.charnum}]*`, 'g'),
 	types: new RegExp(`(${tokens.typeKeywords!.join('|')})\\s*(?=${tokens.colon})`, 'g'),
@@ -199,12 +201,27 @@ function highlight(code: string) {
 		}
 		return content;
 	})();
+	// テンプレート
+	let classes: string[] = [];
+	code = (() => {
+		let codeEdited = removeOthers(code, 'string');
+		let content = code;
+		let indexOffset = 0;
+		for (let match = null; (match = tokenPatterns.template.exec(codeEdited)); ) {
+			content = `${content.substr(0, match.index + match[0].indexOf(match[1]) + match[1].indexOf(match[2]) + indexOffset)}<span class="code-class">${match[2]}</span>${content.substr(
+				match.index + match[0].indexOf(match[1]) + match[1].indexOf(match[2]) + match[2].length + indexOffset
+			)}`;
+			classes.push(match[2]);
+			indexOffset += 32;
+		}
+
+		return content;
+	})();
 	// クラス
 	code = (() => {
 		let codeEdited = removeOthers(code, 'string');
 		let content = code;
 		let indexOffset = 0;
-		let classes: string[] = [];
 		for (let match = null; (match = tokenPatterns.class.exec(codeEdited)); ) {
 			content = `${content.substr(0, match.index + match[0].length - match[1].length + indexOffset)}<span class="code-class">${match[1]}</span>${content.substr(
 				match.index + match[0].length + indexOffset
