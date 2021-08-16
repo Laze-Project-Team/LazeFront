@@ -275,7 +275,7 @@ function highlight(code: string) {
 			const name = match[4] ? match[4] : match[3];
 			if (!tokens.control!.concat(tokens.keywords!, tokens.typeKeywords!).includes(name)) {
 				content = `${content.substr(0, match.index + indexOffset)}${
-					match[2] ? match[0].substr(0, match[2].length) : match[0].substr(0, match[0].length - match[4].length)
+					match[2] ? match[0].slice(0, -match[3].length) : match[0].substr(0, match[0].length - match[4].length)
 				}<span class="code-variable">${name}</span>${content.substr(match.index + match[0].length + indexOffset)}`;
 				indexOffset += 35;
 			}
