@@ -424,7 +424,7 @@ let importObject =  {
 	  createBuffer: function()
 	  {
 		webglBuffers.push((gl!.createBuffer())!);
-		console.log(webglBuffers.length - 1);
+		// console.log(webglBuffers.length - 1);
 		return webglBuffers.length - 1;
 	  },
 	  bindBuffer: function(i:number, j:number)
@@ -633,7 +633,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
 			.then((results) => {
 				clearInterval(interval);
-				console.log(gl?.drawingBufferHeight);
+				// console.log(gl?.drawingBufferHeight);
 				let instance = results.instance;
 				initShaderProgram(gl!, vsSource, fsSource);
 				initShaderProgram(gl!, vsSource, lightFs);
@@ -645,14 +645,14 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const loopFunc = instance.exports.loop as CallableFunction;
 
 				memorySize = memorySizeFunc();
-				console.log(webglPrograms)
+				// console.log(webglPrograms)
 				mainFunc();
 				const draw = () => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
 				};
 				if (instance.exports.loop) interval = setInterval(draw, 1000 / 60);
-				console.log(performance.now() - first);
+				// console.log(performance.now() - first);
 			})
 			.catch(console.error);
 	} else {
