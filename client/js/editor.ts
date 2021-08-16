@@ -642,6 +642,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const loopFunc = instance.exports.loop as CallableFunction;
 
 				memorySize = memorySizeFunc();
+				console.log(webglBuffers);
 				mainFunc();
 				const draw = () => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
