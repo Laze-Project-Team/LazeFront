@@ -260,7 +260,7 @@ function updatePosition(e: MouseEvent) {
 // ============ WebAssembly関係 ==========
 
 // @ts-ignore
-let memory = new WebAssembly.Memory({ initial: 17 });
+let memory = new WebAssembly.Memory({ initial: 17});
 let gl = canvas.getContext('webgl2');
 let webglPrograms:WebGLProgram[] = [];
 //WebGLShader
@@ -424,6 +424,7 @@ let importObject =  {
 	  createBuffer: function()
 	  {
 		webglBuffers.push((gl!.createBuffer())!);
+		console.log(webglBuffers.length - 1);
 		return webglBuffers.length - 1;
 	  },
 	  bindBuffer: function(i:number, j:number)
@@ -616,15 +617,22 @@ const lightFs = `#version 300 es
   }
 `;
 
+let interval:any;
+
 socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 	if (result.success) {
 		logConsole('---------- START ----------');
 		fetch(result.wasm)
 			.then((response) => {
+				webglPrograms = [];
+				webglShaders = [];
+				webglBuffers = [];
+				webglUniformLoc = [];
 				return response.arrayBuffer();
 			})
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
 			.then((results) => {
+				clearInterval(interval);
 				console.log(gl?.drawingBufferHeight);
 				let instance = results.instance;
 				initShaderProgram(gl!, vsSource, fsSource);
@@ -637,13 +645,14 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const loopFunc = instance.exports.loop as CallableFunction;
 
 				memorySize = memorySizeFunc();
+				console.log(webglPrograms)
 				mainFunc();
 				const draw = () => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
 				};
-				if (instance.exports.loop) setInterval(draw, 1000 / 60);
-				console.log(performance.now() - first, performance.now());
+				if (instance.exports.loop) interval = setInterval(draw, 1000 / 60);
+				console.log(performance.now() - first);
 			})
 			.catch(console.error);
 	} else {
