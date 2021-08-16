@@ -260,7 +260,7 @@ function updatePosition(e: MouseEvent) {
 // ============ WebAssembly関係 ==========
 
 // @ts-ignore
-let memory = new WebAssembly.Memory({ initial: 17, shared: true });
+let memory = new WebAssembly.Memory({ initial: 17});
 let gl = canvas.getContext('webgl2');
 let webglPrograms:WebGLProgram[] = [];
 //WebGLShader
