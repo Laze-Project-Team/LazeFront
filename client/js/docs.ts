@@ -188,13 +188,7 @@ function loadDocumentation(location: Location = window.location, pop: boolean = 
 		requestMarkdown('/first', undefined, pop);
 	}
 }
-// loadDocumentation();
-parseMarkdown(`\`\`\`
-実数:大きさ = 1.0;
-ベクトル3D:色(1.0, 0.0, 0.0);
-ベクトル3D:座標(0.0, 0.0, 0.0);
-整数:id = ワールド.ライト追加(大きさ,  色, 座標);
-\`\`\``);
+loadDocumentation();
 
 // Markdownをパース
 function parseMarkdown(content: string) {
