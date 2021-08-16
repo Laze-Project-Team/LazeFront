@@ -448,7 +448,6 @@ let importObject =  {
 		bytes = bytes.filter(element => element != 0);
 		var string = new TextDecoder('utf-8').decode(bytes);
 		// string = [...string].reverse().join("");
-		console.log(190909090, memory)
 		return gl!.getAttribLocation(webglPrograms[i], string);
 	  },
 	  getUniformLocation: function(i:number, offset:number, length:number)
@@ -456,6 +455,7 @@ let importObject =  {
 		var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
 		bytes = bytes.filter(element => element != 0);
 		var string = new TextDecoder('utf-8').decode(bytes);
+		console.log(8989998989, string);
 		webglUniformLoc.push((gl!.getUniformLocation(webglPrograms[i], string))!);
 		return webglUniformLoc.length - 1;
 	  },
