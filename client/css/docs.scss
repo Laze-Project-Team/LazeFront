@@ -151,6 +151,10 @@ body main.fluid-container .version-select {
 .sidenav li {
 	line-height: initial;
 
+	&.active {
+		background: none;
+	}
+
 	a {
 		font-weight: normal;
 		line-height: initial;
