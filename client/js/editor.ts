@@ -464,18 +464,18 @@ let importObject =  {
 		const f32Array = Float32Array.from(f64Array);
 		gl!.uniformMatrix2fv(webglUniformLoc[i], false, f32Array);
 	  },
-	  uniformMatrix3fv: function(i:number, transpose:number, offset:number)
+	  uniformMatrix3fv: function(i:number, transpose:any, offset:number)
 	  {
 		const f64Array = new Float64Array(memory.buffer, offset, 9);
 		const f32Array = Float32Array.from(f64Array);
-		gl!.uniformMatrix3fv(webglUniformLoc[i], false, f32Array);
+		gl!.uniformMatrix3fv(webglUniformLoc[i], transpose, f32Array);
 	  },
-	  uniformMatrix4fv: function(i:number, transpose:number, offset:number)
+	  uniformMatrix4fv: function(i:number, transpose:any, offset:number)
 	  {
 		const buffer = memory.buffer.slice(offset, 128 + offset);
 		const f64Array = new Float64Array(buffer);
 		const f32Array = Float32Array.from(f64Array);
-		gl!.uniformMatrix4fv(webglUniformLoc[i], false, f32Array);
+		gl!.uniformMatrix4fv(webglUniformLoc[i], transpose, f32Array);
 	  },
 	  uniform1f: function(i:number, v0:number)
 	  {
@@ -642,6 +642,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				memorySize = memorySizeFunc();
 				mainFunc();
 				const draw = () => {
+					console.log(webglPrograms);
 					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
 				};
