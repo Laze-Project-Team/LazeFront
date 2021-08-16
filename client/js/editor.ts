@@ -622,8 +622,6 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 		logConsole('---------- START ----------');
 		fetch(result.wasm)
 			.then((response) => {
-				webglPrograms = [];
-				webglShaders = [];
 				webglBuffers = [];
 				webglUniformLoc = [];
 				return response.arrayBuffer();
