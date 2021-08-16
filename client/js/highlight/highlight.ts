@@ -217,11 +217,11 @@ function highlight(code: string) {
 
 		// 型書き換え
 		let tokenPatternDefineEdit = tokenPatternDefine;
-		tokenPatternDefineEdit.types = tokenPatternDefine.types.replace(tokens.typeKeywords!.join('|'), tokens.typeKeywords!.concat(classes).join('|'));
+		tokenPatternDefineEdit.types = tokenPatternDefine.types.replace(tokens.typeKeywords!.join('|') + ')', tokens.typeKeywords!.concat(classes).join('|') + ')');
 		let tokenPatternsEdit = tokenPatterns;
-		tokenPatternsEdit.types = new RegExp(regexpToString(tokenPatterns.types).replace(tokens.typeKeywords!.join('|'), tokens.typeKeywords!.concat(classes).join('|')), 'g');
-		tokenPatternsEdit.variable = new RegExp(regexpToString(tokenPatterns.variable).replace(tokens.typeKeywords!.join('|'), tokens.typeKeywords!.concat(classes).join('|')), 'g');
-		tokenPatternsEdit.function = new RegExp(regexpToString(tokenPatterns.function).replace(tokens.typeKeywords!.join('|'), tokens.typeKeywords!.concat(classes).join('|')), 'g');
+		tokenPatternsEdit.types = new RegExp(regexpToString(tokenPatterns.types).replace(tokens.typeKeywords!.join('|') + ')', tokens.typeKeywords!.concat(classes).join('|') + ')'), 'g');
+		tokenPatternsEdit.variable = new RegExp(regexpToString(tokenPatterns.variable).replace(tokens.typeKeywords!.join('|') + ')', tokens.typeKeywords!.concat(classes).join('|') + ')'), 'g');
+		tokenPatternsEdit.function = new RegExp(regexpToString(tokenPatterns.function).replace(tokens.typeKeywords!.join('|') + ')', tokens.typeKeywords!.concat(classes).join('|') + ')'), 'g');
 
 		return content;
 	})();
