@@ -72,6 +72,10 @@ $(() => {
 	});
 	$('.editor-output').resizable({
 		onDrag: () => adjustCanvasSize('x'),
+		onDragEnd: () => {
+			editor.layout();
+			return true;
+		},
 		handleSelector: '.editor-output-spliter',
 		resizeHeight: false,
 	});
