@@ -336,6 +336,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
 				gl = canvas.getContext('webgl2');
 				memory = new WebAssembly.Memory({ initial: 1 });
+				importObject.mem = memory;
 				return response.arrayBuffer();
 			})
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
