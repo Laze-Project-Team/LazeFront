@@ -73,9 +73,9 @@ const tokenPatterns = {
 	keyword: new RegExp(`[${tokens.char}][${tokens.charnum}]*`, 'g'),
 	types: new RegExp(`(${tokens.typeKeywords!.join('|')})\\s*(?=${tokens.colon})`, 'g'),
 	variable: new RegExp(
-		`((?:[${tokens.separators.replace('\\:', '').replace('\\s', '')}]|^)\\s*(${tokenPatternDefine.name})(?=\\s+[^\\(\\{（｛\\s\\:]|[^${tokens.char}\\(\\{（｛\\s\\:]|\\s*$)|${
-			tokenPatternDefine.separator
-		}${tokenPatternDefine.types}(${tokenPatternDefine.name}))`,
+		`(${tokenPatternDefine.separator}${tokenPatternDefine.types}(${tokenPatternDefine.name})|(?:[${tokens.separators.replace('\\:', '')}]|^)(${tokenPatternDefine.name})(?=\\s+[^\\(\\{（｛\\s\\:]|[^${
+			tokens.char
+		}\\(\\{（｛\\s\\:]|\\s*$))`,
 		'g'
 	),
 	number: new RegExp(`${tokenPatternDefine.separator}((0b|0x)?${tokens.number}(?:${tokens.number}|\\.)*)`, 'g'),
@@ -272,11 +272,11 @@ function highlight(code: string) {
 		let indexOffset = 0;
 		for (let match = null; (match = tokenPatterns.variable.exec(codeEdited)); ) {
 			console.log(match);
-
-			if (!tokens.control!.concat(tokens.keywords!, tokens.typeKeywords!).includes(match[1])) {
+			const name = match[4] ? match[4] : match[3];
+			if (!tokens.control!.concat(tokens.keywords!, tokens.typeKeywords!).includes(name)) {
 				content = `${content.substr(0, match.index + indexOffset)}${
-					match[2] ? match[0].substr(0, match[0].length - match[2].length) : match[0].substr(0, match[0].length - match[4].length)
-				}<span class="code-variable">${match[2] ? match[2] : match[4]}</span>${content.substr(match.index + match[0].length + indexOffset)}`;
+					match[2] ? match[0].substr(0, match[2].length) : match[0].substr(0, match[0].length - match[4].length)
+				}<span class="code-variable">${name}</span>${content.substr(match.index + match[0].length + indexOffset)}`;
 				indexOffset += 35;
 			}
 		}
