@@ -138,7 +138,7 @@ body main.fluid-container .version-select {
 }
 
 #index-list {
-	width: 240px;
+	width: 280px;
 	overflow: hidden scroll;
 
 	.header {
@@ -174,7 +174,7 @@ ul.collapsible {
 	user-select: none;
 }
 ul.collapsible.index-list {
-	padding: 8px;
+	padding: 8px 8px 50vh 8px;
 
 	div.collapsible-body {
 		padding-left: 1rem;
@@ -184,6 +184,9 @@ ul.collapsible.index-list {
 		.mdlink,
 		.collapsible-header {
 			height: 36px;
+			line-height: 36px;
+			padding-top: 0;
+			padding-bottom: 0;
 		}
 	}
 
@@ -240,6 +243,7 @@ ul.collapsible.index-list {
 			text-align: center;
 			margin: 0 0 0 auto;
 			transition: 0.2s;
+			line-height: 36px;
 
 			&.open {
 				transform: rotate(90deg);
@@ -258,7 +262,7 @@ ul.collapsible.index-list {
 
 	.collapsible-header,
 	.content a {
-		padding: 0.5rem 1rem;
+		padding: 0 1rem;
 	}
 }
 
@@ -266,7 +270,7 @@ main .row .main-content {
 	flex: 1;
 	padding: 0 24px;
 	@include mq-down('lg') {
-		margin-top: 70px;
+		padding-top: 70px;
 	}
 	@include mq-up('md') {
 		padding-right: 190px;
@@ -291,6 +295,17 @@ main .row .main-content {
 				background-color: #eee;
 			}
 		}
+	}
+}
+
+.footer {
+	height: 40px;
+	margin: 40px 0 16px 0;
+
+	.copyright {
+		margin: 16px 0 0 0;
+		text-align: center;
+		color: #666;
 	}
 }
 
@@ -334,11 +349,12 @@ main .row .document-outline {
 
 $font-editor: 'Consolas', 'Droid Sans Mono', 'Courier New', ui-monospace, 'Droid Sans Fallback';
 #document-content {
-	margin-top: 4rem;
-
+	min-height: calc(100vh - 4rem - 96px);
 	@include mq-down('lg') {
-		padding-bottom: 80px;
+		min-height: calc(100vh - 4rem - 166px);
 	}
+
+	margin-top: 4rem;
 
 	h1 {
 		display: flex;
