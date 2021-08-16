@@ -617,6 +617,8 @@ const lightFs = `#version 300 es
   }
 `;
 
+let interval:any;
+
 socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 	if (result.success) {
 		logConsole('---------- START ----------');
@@ -630,6 +632,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 			})
 			.then((bytes) => WebAssembly.instantiate(bytes, importObject))
 			.then((results) => {
+				clearInterval(interval);
 				console.log(gl?.drawingBufferHeight);
 				let instance = results.instance;
 				initShaderProgram(gl!, vsSource, fsSource);
@@ -648,8 +651,8 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
 				};
-				if (instance.exports.loop) setInterval(draw, 1000 / 60);
-				console.log(performance.now() - first, performance.now());
+				if (instance.exports.loop) interval = setInterval(draw, 1000 / 60);
+				console.log(performance.now() - first);
 			})
 			.catch(console.error);
 	} else {
