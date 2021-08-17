@@ -127,7 +127,6 @@ function logConsole(value: string | string[], style = 'log') {
 		output.innerHTML = `<span class="output-value">${item}</span><span class="output-timestamp">${moment().format('HH:mm')}</span>`;
 		outputArea.append(output);
 	});
-	outputArea.scrollTop = outputArea.scrollHeight;
 
 	// スクロール
 	outputArea.scrollTop = outputArea.scrollHeight;
@@ -260,28 +259,28 @@ function updatePosition(e: MouseEvent) {
 // ============ WebAssembly関係 ==========
 
 // @ts-ignore
-let memory = new WebAssembly.Memory({ initial: 17});
+let memory = new WebAssembly.Memory({ initial: 17 });
 let gl = canvas.getContext('webgl2');
-let webglPrograms:WebGLProgram[] = [];
+let webglPrograms: WebGLProgram[] = [];
 //WebGLShader
-let webglShaders:WebGLShader[] = [];
+let webglShaders: WebGLShader[] = [];
 //WebGLBuffer
-let webglBuffers:WebGLBuffer[] = [];
-let webglUniformLoc:WebGLUniformLocation[] = [];
+let webglBuffers: WebGLBuffer[] = [];
+let webglUniformLoc: WebGLUniformLocation[] = [];
 
-function initShaderProgram(gl:WebGL2RenderingContext, vsSource:string, fsSource:string) {
+function initShaderProgram(gl: WebGL2RenderingContext, vsSource: string, fsSource: string) {
 	const vertexShader = loadShader(gl, gl!.VERTEX_SHADER, vsSource);
 	const fragmentShader = loadShader(gl, gl!.FRAGMENT_SHADER, fsSource);
-  
+
 	// Create the shader program
 	const shaderProgram = gl.createProgram();
-	if(shaderProgram && vertexShader && fragmentShader){
+	if (shaderProgram && vertexShader && fragmentShader) {
 		gl.attachShader(shaderProgram, vertexShader);
 		gl.attachShader(shaderProgram, fragmentShader);
 		gl.linkProgram(shaderProgram);
-		
+
 		// If creating the shader program failed, alert
-		
+
 		if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
 			alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
 			return null;
@@ -290,268 +289,221 @@ function initShaderProgram(gl:WebGL2RenderingContext, vsSource:string, fsSource:
 	}
 	return shaderProgram;
 }
-  
-  //
-  // creates a shader of the given type, uploads the source and
-  // compiles it.
-  //
-function loadShader(gl:WebGL2RenderingContext, type:number, source:string) {
+
+//
+// creates a shader of the given type, uploads the source and
+// compiles it.
+//
+function loadShader(gl: WebGL2RenderingContext, type: number, source: string) {
 	const shader = gl.createShader(type);
 
 	// Send the source to the shader object
-	if(shader){
+	if (shader) {
 		gl.shaderSource(shader, source);
-		
+
 		// Compile the shader program
-		
+
 		gl.compileShader(shader);
-		
+
 		// See if it compiled successfully
-		
+
 		if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
 			console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
 			gl.deleteShader(shader);
 			return null;
 		}
 	}
-		
+
 	return shader;
 }
-let importObject =  {
-	console:
-	{
-	  log: function(arg:number)
-	  {
-		// var char = new Uint8Array([Math.floor((arg/256)/256), Math.floor((arg%(256*256))/256), Math.floor((arg%(256*256))%256)]);
-		// char = char.filter(char => char != 0);
-		// console.log(new TextDecoder('utf-8').decode(char));
-		logConsole(`${Number(arg)}`);
-		console.log(Number(arg));
-	  },
-	  logstring: function(offset:number, length:number)
-	  {
-		// console.log(Number(length) * 4);
-		var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
-		// bytes.reverse();
-		bytes = bytes.filter(element => element != 0);
-		let string = new TextDecoder('utf-8').decode(bytes);
-		logConsole(string);
-		console.log(string);
-	  },
-	  logMatrix: function(offset:number)
-	  {
-		const buffer = memory.buffer.slice(offset, 128 + offset);
-		const f64Array = new Float64Array(buffer);
-		const f32Array = Float32Array.from(f64Array);
-		logConsole(JSON.stringify(f32Array));
-		console.log(f32Array);
-	  }
+let importObject = {
+	console: {
+		log: function (arg: number) {
+			// var char = new Uint8Array([Math.floor((arg/256)/256), Math.floor((arg%(256*256))/256), Math.floor((arg%(256*256))%256)]);
+			// char = char.filter(char => char != 0);
+			// console.log(new TextDecoder('utf-8').decode(char));
+			logConsole(`${Number(arg)}`);
+			console.log(Number(arg));
+		},
+		logstring: function (offset: number, length: number) {
+			// console.log(Number(length) * 4);
+			var bytes = new Uint8Array(memory.buffer, offset, Number(length) * 4);
+			// bytes.reverse();
+			bytes = bytes.filter((element) => element != 0);
+			let string = new TextDecoder('utf-8').decode(bytes);
+			logConsole(string);
+			console.log(string);
+		},
+		logMatrix: function (offset: number) {
+			const buffer = memory.buffer.slice(offset, 128 + offset);
+			const f64Array = new Float64Array(buffer);
+			const f32Array = Float32Array.from(f64Array);
+			logConsole(JSON.stringify(f32Array));
+			console.log(f32Array);
+		},
 	},
-	performance:
-	{
-	  now: function(){
-		return performance.now();
-	  }
+	performance: {
+		now: function () {
+			return performance.now();
+		},
 	},
-	js:
-	{
-	  mem: memory,
-	  checkKeyPress: function(keyCode:number)
-	  {
-		return BigInt(pressedKeys[keyCode]);
-	  },
-	  checkMousePress: function()
-	  {
-		return BigInt(mousePressed);
-	  },
-	  checkMouseX: function()
-	  {
-		return mouseX;
-	  },
-	  checkMouseY: function()
-	  {
-		return mouseY;
-	  },
-	  rand: function()
-	  {
-		return Math.random();
-	  },
-	  alloc: function(size:number)
-	  {
-		let temp = memorySize;
-		memorySize+=size;
-		return temp;
-	  }
+	js: {
+		mem: memory,
+		checkKeyPress: function (keyCode: number) {
+			return BigInt(pressedKeys[keyCode]);
+		},
+		checkMousePress: function () {
+			return BigInt(mousePressed);
+		},
+		checkMouseX: function () {
+			return mouseX;
+		},
+		checkMouseY: function () {
+			return mouseY;
+		},
+		rand: function () {
+			return Math.random();
+		},
+		alloc: function (size: number) {
+			let temp = memorySize;
+			memorySize += size;
+			return temp;
+		},
 	},
-	webgl:
-	{
-	  clearColor: function(r:number, g:number, b:number, a:number)
-	  {
-		gl!.clearColor(r, g, b, a);
-	  },
-	  clear: function(i:number)
-	  {
-		gl!.clear(i);
-	  },
-	  clearDepth: function(i:number)
-	  {
-		gl!.clearDepth(i);
-	  },
-	  depthFunc: function(i:number)
-	  {
-		gl!.depthFunc(i);
-	  },
-	  enable: function (i:number) {
-		gl!.enable(i);
-	  },
-	  vertexAttribPointer: function(index:number, size:number, type:number, normalized:number, stride:number, offset:number)
-	  {
-		gl!.vertexAttribPointer(index, size, type, false, stride, offset);
-	  },
-	  enableVertexAttribArray: function(index:number)
-	  {
-		gl!.enableVertexAttribArray(index);
-	  },
-	  disable: function(i:number)
-	  {
-		gl!.disable(i);
-	  },
-	  createProgram: function()
-	  {
-		webglPrograms.push((gl!.createProgram())!);
-		return webglPrograms.length - 1;
-	  },
-	  createBuffer: function()
-	  {
-		webglBuffers.push((gl!.createBuffer())!);
-		// console.log(webglBuffers.length - 1);
-		return webglBuffers.length - 1;
-	  },
-	  bindBuffer: function(i:number, j:number)
-	  {
-		gl!.bindBuffer(i, webglBuffers[j]);
-	  },
-	  bufferData: function(i:number, offset:number, size:number, j:number)
-	  {
-		const buffer = memory.buffer.slice(offset, size * 8 + offset);
-		const f64Array = new Float64Array(buffer);
-		const f32Array = Float32Array.from(f64Array);
-		gl!.bufferData(i, f32Array, j);
-	  },
-	  useProgram: function(i:number)
-	  {
-		gl!.useProgram(webglPrograms[i]);
-	  },
-	  getAttribLocation: function(i:number, offset:number, length:number)
-	  {
-		var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
-		// bytes.reverse();
-		bytes = bytes.filter(element => element != 0);
-		var string = new TextDecoder('utf-8').decode(bytes);
-		// string = [...string].reverse().join("");
-		return gl!.getAttribLocation(webglPrograms[i], string);
-	  },
-	  getUniformLocation: function(i:number, offset:number, length:number)
-	  {
-		var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
-		bytes = bytes.filter(element => element != 0);
-		var string = new TextDecoder('utf-8').decode(bytes);
-		webglUniformLoc.push((gl!.getUniformLocation(webglPrograms[i], string))!);
-		return webglUniformLoc.length - 1;
-	  },
-	  uniformMatrix2fv: function(i:number, transpose:number, offset:number)
-	  {
-		const f64Array = new Float64Array(memory.buffer, offset, 4);
-		const f32Array = Float32Array.from(f64Array);
-		gl!.uniformMatrix2fv(webglUniformLoc[i], false, f32Array);
-	  },
-	  uniformMatrix3fv: function(i:number, transpose:any, offset:number)
-	  {
-		const f64Array = new Float64Array(memory.buffer, offset, 9);
-		const f32Array = Float32Array.from(f64Array);
-		gl!.uniformMatrix3fv(webglUniformLoc[i], transpose, f32Array);
-	  },
-	  uniformMatrix4fv: function(i:number, transpose:any, offset:number)
-	  {
-		const buffer = memory.buffer.slice(offset, 128 + offset);
-		const f64Array = new Float64Array(buffer);
-		const f32Array = Float32Array.from(f64Array);
-		gl!.uniformMatrix4fv(webglUniformLoc[i], transpose, f32Array);
-	  },
-	  uniform1f: function(i:number, v0:number)
-	  {
-		gl!.uniform1f(webglUniformLoc[i], v0);
-	  },
-	  uniform1fv: function(i:number, v0:any)
-	  {
-		gl!.uniform1fv(webglUniformLoc[i], v0);
-	  },
-	  uniform1i: function(i:number, v0:any)
-	  {
-		gl!.uniform1i(webglUniformLoc[i], v0);
-	  },
-	  uniform1iv: function(i:number, v0:any)
-	  {
-		gl!.uniform1iv(webglUniformLoc[i], v0);
-	  },
-  
-	  uniform2f: function(i:number, v0:number, v1:number)
-	  {
-		gl!.uniform2f(webglUniformLoc[i], v0, v1);
-	  },
-	  uniform2fv: function(i:number, v0:any, v1:any)
-	  {
-		gl!.uniform2fv(webglUniformLoc[i], v0, v1);
-	  },
-	  uniform2i: function(i:number, v0:any, v1:any)
-	  {
-		gl!.uniform2i(webglUniformLoc[i], v0, v1);
-	  },
-	  uniform2iv: function(i:number, v0:any, v1:any)
-	  {
-		gl!.uniform2iv(webglUniformLoc[i], v0, v1);
-	  },
-  
-	  uniform3f: function(i:number, v0:any, v1:any, v2:any)
-	  {
-		gl!.uniform3f(webglUniformLoc[i], v0, v1, v2);
-	  },
-	  uniform3fv: function(i:number, v0:any, v1:any, v2:any)
-	  {
-		gl!.uniform3fv(webglUniformLoc[i], v0, v1, v2);
-	  },
-	  uniform3i: function(i:number, v0:any, v1:any, v2:any)
-	  {
-		gl!.uniform3i(webglUniformLoc[i], v0, v1, v2);
-	  },
-	  uniform3iv: function(i:number, v0:any, v1:any, v2:any)
-	  {
-		gl!.uniform3iv(webglUniformLoc[i], v0, v1, v2);
-	  },
-  
-	  uniform4f: function(i:number, v0:any, v1:any, v2:any, v3:any)
-	  {
-		gl!.uniform4f(webglUniformLoc[i], v0, v1, v2, v3);
-	  },
-	  uniform4fv: function(i:number, v0:any, v1:any, v2:any, v3:any)
-	  {
-		// gl!.uniform4fv(webglUniformLoc[i], v0, v1, v2, v3);
-	  },
-	  uniform4i: function(i:number, v0:any, v1:any, v2:any, v3:any)
-	  {
-		gl!.uniform4i(webglUniformLoc[i], v0, v1, v2, v3);
-	  },
-	  uniform4iv: function(i:number, v0:any, v1:any, v2:any, v3:any)
-	  {
-		// gl!.uniform4iv(webglUniformLoc[i], v0, v1, v2, v3);
-	  },
-	  drawArrays: function(i:any, first:any, count:any)
-	  {
-		// console.log(i);
-		gl!.drawArrays(i, first, count);
-	  }
-	}
-  };
+	webgl: {
+		clearColor: function (r: number, g: number, b: number, a: number) {
+			gl!.clearColor(r, g, b, a);
+		},
+		clear: function (i: number) {
+			gl!.clear(i);
+		},
+		clearDepth: function (i: number) {
+			gl!.clearDepth(i);
+		},
+		depthFunc: function (i: number) {
+			gl!.depthFunc(i);
+		},
+		enable: function (i: number) {
+			gl!.enable(i);
+		},
+		vertexAttribPointer: function (index: number, size: number, type: number, normalized: number, stride: number, offset: number) {
+			gl!.vertexAttribPointer(index, size, type, false, stride, offset);
+		},
+		enableVertexAttribArray: function (index: number) {
+			gl!.enableVertexAttribArray(index);
+		},
+		disable: function (i: number) {
+			gl!.disable(i);
+		},
+		createProgram: function () {
+			webglPrograms.push(gl!.createProgram()!);
+			return webglPrograms.length - 1;
+		},
+		createBuffer: function () {
+			webglBuffers.push(gl!.createBuffer()!);
+			// console.log(webglBuffers.length - 1);
+			return webglBuffers.length - 1;
+		},
+		bindBuffer: function (i: number, j: number) {
+			gl!.bindBuffer(i, webglBuffers[j]);
+		},
+		bufferData: function (i: number, offset: number, size: number, j: number) {
+			const buffer = memory.buffer.slice(offset, size * 8 + offset);
+			const f64Array = new Float64Array(buffer);
+			const f32Array = Float32Array.from(f64Array);
+			gl!.bufferData(i, f32Array, j);
+		},
+		useProgram: function (i: number) {
+			gl!.useProgram(webglPrograms[i]);
+		},
+		getAttribLocation: function (i: number, offset: number, length: number) {
+			var bytes = new Uint8Array(memory.buffer, offset, Number(length) * 4);
+			// bytes.reverse();
+			bytes = bytes.filter((element) => element != 0);
+			var string = new TextDecoder('utf-8').decode(bytes);
+			// string = [...string].reverse().join("");
+			return gl!.getAttribLocation(webglPrograms[i], string);
+		},
+		getUniformLocation: function (i: number, offset: number, length: number) {
+			var bytes = new Uint8Array(memory.buffer, offset, Number(length) * 4);
+			bytes = bytes.filter((element) => element != 0);
+			var string = new TextDecoder('utf-8').decode(bytes);
+			webglUniformLoc.push(gl!.getUniformLocation(webglPrograms[i], string)!);
+			return webglUniformLoc.length - 1;
+		},
+		uniformMatrix2fv: function (i: number, transpose: number, offset: number) {
+			const f64Array = new Float64Array(memory.buffer, offset, 4);
+			const f32Array = Float32Array.from(f64Array);
+			gl!.uniformMatrix2fv(webglUniformLoc[i], false, f32Array);
+		},
+		uniformMatrix3fv: function (i: number, transpose: any, offset: number) {
+			const f64Array = new Float64Array(memory.buffer, offset, 9);
+			const f32Array = Float32Array.from(f64Array);
+			gl!.uniformMatrix3fv(webglUniformLoc[i], transpose, f32Array);
+		},
+		uniformMatrix4fv: function (i: number, transpose: any, offset: number) {
+			const buffer = memory.buffer.slice(offset, 128 + offset);
+			const f64Array = new Float64Array(buffer);
+			const f32Array = Float32Array.from(f64Array);
+			gl!.uniformMatrix4fv(webglUniformLoc[i], transpose, f32Array);
+		},
+		uniform1f: function (i: number, v0: number) {
+			gl!.uniform1f(webglUniformLoc[i], v0);
+		},
+		uniform1fv: function (i: number, v0: any) {
+			gl!.uniform1fv(webglUniformLoc[i], v0);
+		},
+		uniform1i: function (i: number, v0: any) {
+			gl!.uniform1i(webglUniformLoc[i], v0);
+		},
+		uniform1iv: function (i: number, v0: any) {
+			gl!.uniform1iv(webglUniformLoc[i], v0);
+		},
+
+		uniform2f: function (i: number, v0: number, v1: number) {
+			gl!.uniform2f(webglUniformLoc[i], v0, v1);
+		},
+		uniform2fv: function (i: number, v0: any, v1: any) {
+			gl!.uniform2fv(webglUniformLoc[i], v0, v1);
+		},
+		uniform2i: function (i: number, v0: any, v1: any) {
+			gl!.uniform2i(webglUniformLoc[i], v0, v1);
+		},
+		uniform2iv: function (i: number, v0: any, v1: any) {
+			gl!.uniform2iv(webglUniformLoc[i], v0, v1);
+		},
+
+		uniform3f: function (i: number, v0: any, v1: any, v2: any) {
+			gl!.uniform3f(webglUniformLoc[i], v0, v1, v2);
+		},
+		uniform3fv: function (i: number, v0: any, v1: any, v2: any) {
+			gl!.uniform3fv(webglUniformLoc[i], v0, v1, v2);
+		},
+		uniform3i: function (i: number, v0: any, v1: any, v2: any) {
+			gl!.uniform3i(webglUniformLoc[i], v0, v1, v2);
+		},
+		uniform3iv: function (i: number, v0: any, v1: any, v2: any) {
+			gl!.uniform3iv(webglUniformLoc[i], v0, v1, v2);
+		},
+
+		uniform4f: function (i: number, v0: any, v1: any, v2: any, v3: any) {
+			gl!.uniform4f(webglUniformLoc[i], v0, v1, v2, v3);
+		},
+		uniform4fv: function (i: number, v0: any, v1: any, v2: any, v3: any) {
+			// gl!.uniform4fv(webglUniformLoc[i], v0, v1, v2, v3);
+		},
+		uniform4i: function (i: number, v0: any, v1: any, v2: any, v3: any) {
+			gl!.uniform4i(webglUniformLoc[i], v0, v1, v2, v3);
+		},
+		uniform4iv: function (i: number, v0: any, v1: any, v2: any, v3: any) {
+			// gl!.uniform4iv(webglUniformLoc[i], v0, v1, v2, v3);
+		},
+		drawArrays: function (i: any, first: any, count: any) {
+			// console.log(i);
+			gl!.drawArrays(i, first, count);
+		},
+	},
+};
 const vsSource = ` #version 300 es
   layout (location = 0) in vec3 aVertexPosition;
   layout (location = 1) in vec3 aVertexNormal;
@@ -617,7 +569,7 @@ const lightFs = `#version 300 es
   }
 `;
 
-let interval:any;
+let interval: any;
 
 socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 	if (result.success) {
