@@ -806,7 +806,7 @@ function renameFile(filePath: string) {
 	const pathList = filePath.split('/');
 	const filename = pathList.pop();
 	const dir = pathList.join('/');
-	openModal('名前の変更', '', [{ id: 'name', name: '変更後の名前', placeholder: filename, required: true }], () => {
+	openModal('名前の変更', '', [{ id: 'name', name: '変更後の名前', placeholder: filename, required: true }], getInitialButtonWithName('変更'), () => {
 		const rmFilename = $('#modal-field-name').val()!.toString();
 		if (rmFilename.indexOf('/') > -1) {
 			return {
@@ -839,14 +839,14 @@ function renameFile(filePath: string) {
 }
 function deleteFile(filePath: string) {
 	const filename = filePath.split('/').slice(-1)[0];
-	openModal('ファイル/フォルダの削除', `${filename} を削除します。削除されたファイルは失われ、復元することはできません。本当に削除してよろしいですか？`, [], () => {
+	openModal('ファイル/フォルダの削除', `${filename} を削除します。削除されたファイルは失われ、復元することはできません。本当に削除してよろしいですか？`, [], getInitialButtonWithName('削除'), () => {
 		deleteDir(filePath);
 		return { success: true };
 	});
 }
 function newFile(type: 'file' | 'folder', dir: string) {
 	const name = type === 'file' ? 'ファイル' : 'フォルダ';
-	openModal(`新規${name}作成`, `作成されるディレクトリ：${dir}/`, [{ id: 'name', name: `${name}名`, required: true }], () => {
+	openModal(`新規${name}作成`, `作成されるディレクトリ：${dir}/`, [{ id: 'name', name: `${name}名`, required: true }], getInitialButtonWithName('作成'), () => {
 		const filename = $('#modal-field-name').val()!.toString();
 		const filePath = `${dir ? dir + '/' : ''}${filename}`;
 		if (filename.indexOf('/') > -1) {
@@ -945,20 +945,22 @@ function newDir(type: 'file' | 'folder', name: string, dir: string) {
 }
 
 function loadFile(path: string) {
-	$('#editor-cover').hide();
-	currentFile = path;
-	$('#footer-filename').text(path.split('/').slice(-1)[0]);
-	const content = currentContents.filter((content) => content.path === path);
-	if (content.length > 0) {
-		editor.getModel()?.setValue(content[0].content);
-		$('.current-file').removeClass(['nofile', 'unsaved']);
+	closeFileWarn(() => {
+		$('#editor-cover').hide();
+		currentFile = path;
+		$('#footer-filename').text(path.split('/').slice(-1)[0]);
+		const content = currentContents.filter((content) => content.path === path);
+		if (content.length > 0) {
+			editor.getModel()?.setValue(content[0].content);
+			$('.current-file').removeClass(['nofile', 'unsaved']);
 
-		// active切り替え
-		$('.ui-dir.active').removeClass('active');
-		$(`.ui-dir[data-path="${path}"]`).addClass('active');
-	} else {
-		console.error(`Cannot read file ${path}`);
-	}
+			// active切り替え
+			$('.ui-dir.active').removeClass('active');
+			$(`.ui-dir[data-path="${path}"]`).addClass('active');
+		} else {
+			console.error(`Cannot read file ${path}`);
+		}
+	});
 }
 function closeFile() {
 	$('#editor-cover').show();
@@ -966,14 +968,37 @@ function closeFile() {
 	$('.current-file').addClass('nofile');
 	$('.exp-view li.active').removeClass('active');
 }
-function closeFileWarn() {
+
+function closeFileWarn(callback: Function) {
 	if ($('.current-file').hasClass('unsaved')) {
-		openModal('ファイルを閉じる', `${currentFile}は保存されていませんが、これを閉じようとしています。閉じた場合このファイルに加えた変更は失われます。本当に閉じてよろしいですか？`, [], closeFile);
+		openModal(
+			'ファイルを閉じる',
+			`${currentFile}は保存されていませんが、これを閉じようとしています。閉じた場合このファイルに加えた変更は失われます。本当に閉じてよろしいですか？`,
+			[],
+			[
+				{ id: 'cancel', name: 'キャンセル', role: 'cancel', icon: '/assets/icons/icons.svg#cross' },
+				{
+					id: 'save',
+					name: '保存しないで閉じる',
+					icon: '/assets/icons/icons.svg#trash',
+					callback: () => {
+						$('#modal').removeClass('show');
+						callback();
+					},
+				},
+				{ id: 'enter', name: '保存して閉じる', role: 'submit', icon: '/assets/icons/icons.svg#save' },
+			],
+			() => {
+				save(editor.getValue());
+				callback();
+				return { success: true };
+			}
+		);
 	} else {
-		closeFile();
+		callback();
 	}
 }
-$('#footer-fileclose').on('click', closeFileWarn);
+$('#footer-fileclose').on('click', () => closeFileWarn(closeFile));
 editor.onDidChangeModelContent(() => $('.current-file').addClass('unsaved'));
 
 interface field {
@@ -985,6 +1010,13 @@ interface field {
 	required?: boolean;
 	placeholder?: string;
 	disabled?: boolean;
+}
+interface Button {
+	id: string;
+	name: string;
+	role?: string;
+	icon?: string;
+	callback?: Function;
 }
 const getInput = (field: field) => {
 	if (field.type === 'select') {
@@ -1005,7 +1037,16 @@ const getInput = (field: field) => {
 			/>`;
 	}
 };
-function openModal(title: string, description: string, fields: field[], callback: Function) {
+const initialButtons = [
+	{ id: 'cancel', name: 'キャンセル', role: 'cancel', icon: '/assets/icons/icons.svg#cross' },
+	{ id: 'enter', name: '決定', role: 'submit', icon: '/assets/icons/icons.svg#check' },
+];
+const getInitialButtonWithName = (name: string) => {
+	let result: Button[] = JSON.parse(JSON.stringify(initialButtons));
+	result[1]!.name = name;
+	return result;
+};
+function openModal(title: string, description: string, fields: field[], buttons: Button[] = initialButtons, callback: Function) {
 	$('#modal .title').text(title);
 	$('#modal .description').text(description);
 	$('#modal .fields').html('');
@@ -1015,6 +1056,23 @@ function openModal(title: string, description: string, fields: field[], callback
 	setTimeout(() => {
 		$('#modal .fields .field:first-child input').trigger('focus');
 	}, 200);
+
+	$('#modal .buttons').html('');
+	for (const button of buttons) {
+		const btnElement = $(`
+			<button
+				id="modal-${button.id}"
+				type="${button.role === 'submit' ? 'submit' : 'button'}"
+			>
+				<svg viewBox="0 0 64 64">
+					<use xlink:href="${button.icon}"></use>
+				</svg>
+				<span>${button.name}</span>
+			</button>`)[0];
+		if (button.callback) btnElement.addEventListener('click', () => button.callback!());
+		if (button.role === 'cancel') btnElement.addEventListener('click', () => $('#modal').removeClass('show'));
+		$('#modal .buttons').append(btnElement);
+	}
 
 	$('#modal-form').off('submit');
 	$('#modal-form').on('submit', () => {
@@ -1038,7 +1096,6 @@ function openModal(title: string, description: string, fields: field[], callback
 	$('#modal').addClass('show');
 }
 $(() => {
-	$('#modal-cancel').on('click', () => $('#modal').removeClass('show'));
 	$('#modal-back').on('click', () => $('#modal').removeClass('show'));
 	$(document).on('keydown', (e) => (e.key === 'Escape' ? $('#modal').removeClass('show') : null));
 
@@ -1047,13 +1104,19 @@ $(() => {
 		fetch('/samplelist')
 			.then((res) => res.json())
 			.then((res) => {
-				openModal('読み込むサンプルを選択', '以下の中から読み込むサンプルを選択してください', [{ id: 'sample', name: 'サンプル', type: 'select', options: res }], () => {
-					const value = $('#modal-field-sample').val()!.toString();
-					socket.emit('loadProject', { projectName: value });
-					return {
-						success: true,
-					};
-				});
+				openModal(
+					'読み込むサンプルを選択',
+					'以下の中から読み込むサンプルを選択してください',
+					[{ id: 'sample', name: 'サンプル', type: 'select', options: res }],
+					getInitialButtonWithName('読み込み'),
+					() => {
+						const value = $('#modal-field-sample').val()!.toString();
+						socket.emit('loadProject', { projectName: value });
+						return {
+							success: true,
+						};
+					}
+				);
 			});
 	});
 });
