@@ -136,7 +136,7 @@ function logConsole(value: string | string[], style = 'log') {
 	}
 
 	// スクロール
-	outputArea.scrollTop = outputArea.scrollHeight;
+	if (outputArea.scrollTop + outputArea.clientHeight == outputArea.scrollHeight) outputArea.scrollTop = outputArea.scrollHeight;
 }
 // ポップアップメッセージ
 function logPopup(value: string, style = 'info') {
