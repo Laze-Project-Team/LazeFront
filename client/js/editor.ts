@@ -128,6 +128,13 @@ function logConsole(value: string | string[], style = 'log') {
 		outputArea.append(output);
 	});
 
+	// 10000件を超えていたら古いものから破棄
+	if (outputArea.children.length > 10000) {
+		for (let i = 0; i < outputArea.children.length - 10000; i++) {
+			outputArea.querySelector(':scope > *:first-child')!.remove();
+		}
+	}
+
 	// スクロール
 	outputArea.scrollTop = outputArea.scrollHeight;
 }
