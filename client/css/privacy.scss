@@ -12,4 +12,15 @@
 	h2 {
 		font-size: 1.6rem;
 	}
+	& > ol {
+		margin: 8px 0;
+
+		& > ol {
+			margin: 16px 0;
+		}
+
+		li {
+			margin: 8px 0;
+		}
+	}
 }
