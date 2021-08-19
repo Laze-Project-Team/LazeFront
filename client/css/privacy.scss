@@ -5,14 +5,21 @@
 	padding-left: 32px;
 
 	h1 {
-		font-size: 3rem;
+		font-size: 2.5rem;
 		padding-bottom: 8px;
 		border-bottom: solid #ccc 1px;
 	}
 	h2 {
-		font-size: 2rem;
+		font-size: 1.6rem;
 	}
-	p {
-		font-size: 1.2rem;
+	h3 {
+		font-size: 1.3rem;
+		font-weight: bold;
+	}
+
+	ul {
+		li {
+			margin: 8px 0;
+		}
 	}
 }
