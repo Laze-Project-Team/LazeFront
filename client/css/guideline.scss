@@ -1,0 +1,48 @@
+.list {
+	margin: 16px 0;
+	list-style: disc;
+}
+
+.logos {
+	margin: 32px 0;
+
+	img {
+		margin: 0 32px;
+	}
+}
+
+.logo-colors {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 32px 0;
+}
+
+.logo-color {
+	display: flex;
+	align-items: center;
+	margin-right: 32px;
+}
+
+.color-box {
+	width: 160px;
+	height: 90px;
+
+	&.color-main {
+		background-color: #eba059;
+	}
+	&.color-spare {
+		background: #f2bd8b;
+	}
+
+	margin-right: 32px;
+}
+
+.color-caption {
+	width: 250px;
+
+	h4 {
+		font-size: 1.1rem;
+		margin: 4px 0;
+		padding-left: 16px;
+	}
+}
