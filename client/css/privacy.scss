@@ -12,6 +12,13 @@
 	h2 {
 		font-size: 1.6rem;
 	}
+	& > ol {
+		margin: 8px 0;
+
+		& > ol {
+			margin: 16px 0;
+		}
+
 	h3 {
 		font-size: 1.3rem;
 		font-weight: bold;
