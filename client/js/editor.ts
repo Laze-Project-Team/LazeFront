@@ -38,6 +38,10 @@ $(() => {
 		}
 	});
 
+	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
+	canvas.width = 1280;
+	canvas.height = 720;
+
 	const adjustCanvasSize = (direction: 'x' | 'y') => {
 		if (direction === 'x') {
 			(document.querySelector('.editor-console') as HTMLElement)!.style.height = (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
@@ -49,6 +53,20 @@ $(() => {
 	setTimeout(() => {
 		adjustCanvasSize('x');
 	}, 100);
+
+	let previous = {
+		x: $(window).width(),
+		y: $(window).height(),
+	};
+	$(window).on('resize', () => {
+		if (previous.x === $(window).width()) adjustCanvasSize('y');
+		else adjustCanvasSize('x');
+
+		previous = {
+			x: $(window).width(),
+			y: $(window).height(),
+		};
+	});
 
 	// リサイズ可能に
 	$('.explorer').resizable({
@@ -79,10 +97,6 @@ $(() => {
 		handleSelector: '.editor-output-spliter',
 		resizeHeight: false,
 	});
-
-	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-	canvas.width = 1280;
-	canvas.height = 720;
 
 	// アカウントのステータス更新
 	updateAccount();
@@ -681,6 +695,7 @@ function contextmenu(contexts: contextObject[], e: Event) {
 		menu.append(item);
 	}
 
+	// @ts-ignore
 	menu.css({ top: `${e.pageY}px`, left: `${e.pageX}px` });
 }
 $(() => {
