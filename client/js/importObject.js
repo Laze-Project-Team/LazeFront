@@ -286,6 +286,18 @@ export default function(gl, pressedKeys, info, logConsole, memory){
         {
           // console.log(i);
           gl.drawArrays(i, first, count);
+        },
+        loadTexture: function(offset, length){
+          var bytes = new Uint8Array(memory.buffer, offset, Number(length)*4);
+          bytes = bytes.filter(element => element != 0);
+          var string = new TextDecoder('utf-8').decode(bytes);
+          return _loadTexture(gl, string);
+        },
+        activeTexture: function(i){
+          gl.activeTexture(i);
+        },
+        bindTexture: function(i, j){
+          gl.bindTexture(i, webglTextures[j]);
         }
       }
     };
