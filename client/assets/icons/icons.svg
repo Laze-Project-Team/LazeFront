@@ -15,6 +15,12 @@
 	<symbol id="check" viewBox="0 0 64 64">
 		<polyline points="8,32 24,48 56,16" fill="none" stroke="currentColor" stroke-width="7" />
 	</symbol>
+	<symbol id="trash" viewBox="0 0 64 64">
+		<polyline points="4,8 4,16 60,16 60,8 36,8 36,4 28,4 28,8 36,8 4,8 4,16 8,16 12,60 52,60 56,16" stroke="currentColor" stroke-width="4" fill="none" />
+		<line x1="20" x2="24" y1="24" y2="52" stroke-width="4" stroke="currentColor" />
+		<line x1="32" x2="32" y1="24" y2="52" stroke-width="4" stroke="currentColor" />
+		<line x1="44" x2="40" y1="24" y2="52" stroke-width="4" stroke="currentColor" />
+	</symbol>
 	<symbol id="plus" viewBox="0 0 64 64">
 		<line x1="8" x2="56" y1="32" y2="32" stroke="currentColor" stroke-width="6" />
 		<line x1="32" x2="32" y1="8" y2="56" stroke="currentColor" stroke-width="6" />
