@@ -4,7 +4,7 @@ var userNum = 0;
 let first = true;
 window.addEventListener("click", (event) => {
    if(first){
-      connection = new WebSocket('ws://localhost:9090');
+      connection = new WebSocket('wss://laze.ddns.net:9090');
       console.log(5555);
 
       //handle messages from the server 
