@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta content="プログラミング言語Lazeで作られたゲームです。コネクト4というゲームで、自分の色のコマを縦横斜めいずれかに4つ並べることで勝利になります。" name="description" />
+		<meta property="og:title" content="Laze Game - Laze" />
+		<meta property="og:description" content="プログラミング言語Lazeで作られたゲームです。コネクト4というゲームで、自分の色のコマを縦横斜めいずれかに4つ並べることで勝利になります。" />
+		<meta property="og:type" content="article" />
+		<meta property="og:url" content="https://laze.ddns.net/game/" />
+		<meta property="og:image" content="https://laze.ddns.net/assets/icons/logo.png" />
+		<meta property="og:site_name" content="Laze Game" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<title>Laze Game - Laze</title>
+
+		<!-- ファビコン -->
+		<link rel="shortcut icon" href="/assets/icons/logo.png" type="image/x-icon" />
+
+		<!-- Materialize -->
+		<link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+		<!-- My Code -->
+		<link rel="stylesheet" href="/css/game.css" />
+	</head>
+
+	<body>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSMWQLS" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+
+		<h1 hidden>Lazeゲーム</h1>
+
+		<div class="game-screen">
+			<canvas id="game-screen"></canvas>
+		</div>
+
+		<!-- Materialize -->
+		<script type="text/javascript" src="/js/materialize.min.js"></script>
+
+		<!-- My Code -->
+		<script src="/js/dist/game.js"></script>
+	</body>
+</html>
