@@ -36,16 +36,93 @@
 		<main>
 			<div class="screen-left screen-border"></div>
 			<div class="screen-wrapper">
-				<div class="screen-up screen-border"></div>
+				<div class="screen-up screen-border">
+					<h1 class="title"></h1>
+				</div>
 				<div class="game-wrapper">
 					<div class="shadow"></div>
 					<div class="game-screen scene-title">
 						<canvas id="game-screen" width="768" height="512"></canvas>
 
 						<div id="title-screen" class="screen">
-							<h2>Connect 4</h2>
+							<div class="title">
+								<h2>Connect 4</h2>
+								<div class="buttons">
+									<button id="start" class="waves-effect">ゲームスタート</button>
+									<button id="how-to-play" class="waves-effect sub">遊び方</button>
+								</div>
+							</div>
+						</div>
+
+						<div id="how-to-play-screen" class="screen">
+							<h2>遊び方</h2>
+							<div class="how-to-play">
+								<div class="descriptions">
+									<p>Connect 4 は縦6×横7のボードの中で自分のコマと相手のコマを交互に置いていき、どちらが先に縦横斜めのいずれかに4つ並べられるかを競うゲームです。</p>
+									<p>ただし空中にはコマが設置できないことに気を付けてください。</p>
+									<p>右の例では黒い側が勝利しています</p>
+								</div>
+								<div class="sample-board">
+									<table class="board">
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td class="main"></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td class="sub laze"></td>
+											<td class="sub"></td>
+											<td class="sub"></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td class="main"></td>
+											<td class="sub laze"></td>
+											<td class="sub"></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td class="sub"></td>
+											<td class="main"></td>
+											<td class="main"></td>
+											<td class="sub laze"></td>
+											<td class="main"></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td class="main"></td>
+											<td class="sub"></td>
+											<td class="main"></td>
+											<td class="main"></td>
+											<td class="sub laze"></td>
+											<td class="main"></td>
+										</tr>
+									</table>
+								</div>
+							</div>
 							<div class="buttons">
-								<button id="start" class="waves-effect">ゲームスタート</button>
+								<button id="return" class="waves-effect">戻る</button>
 							</div>
 						</div>
 
@@ -58,14 +135,41 @@
 								<div></div>
 							</div>
 							<div class="buttons">
-								<button id="cancel" class="waves-effect">キャンセル</button>
+								<button id="cancel" class="waves-effect" hidden>キャンセル</button>
+							</div>
+							<div class="ripples">
+								<div></div>
+								<div></div>
+								<div></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="screen-bottom screen-border"></div>
+				<div class="screen-bottom screen-border">
+					<p class="tip">© 2021 Laze Project Team</p>
+				</div>
 			</div>
-			<div class="screen-right screen-border"></div>
+			<div class="screen-right screen-border">
+				<div class="section">
+					<h3>このゲームについて</h3>
+					<p>
+						Connect 4 自体はご存じの人も多いのではないでしょうか？重力付き四目並べとも呼ばれるゲームで、縦横斜めのいずれかに自分のコマを4つ並べることができれば勝利という至ってシンプルなゲームです。
+					</p>
+					<p>ここではこのゲームを自作プログラミング言語Lazeで（全部ではありませんが）実装しています。</p>
+				</div>
+				<div class="section">
+					<h3>Lazeって何？</h3>
+					<p>WebAssemblyにコンパイルする自作プログラミング言語です。</p>
+					<p>「全ての人に快適なプログラミングを」という理念を掲げ、現在開発を勧めています。</p>
+					<div class="qr-wrapper">
+						<div>
+							<p>まだできないことも多いですが、少しでもこのゲームでLazeを体感して頂ければと思います。</p>
+							<p>スマホ等をお持ちの方は右のQRコードを読み取るか、「Laze プログラミング」で検索するとLazeの公式サイトにアクセスすることができます。</p>
+						</div>
+						<img src="assets/icons/lazeQR.png" alt="Laze公式サイトへのQRコード" class="qr" width="192" height="192" />
+					</div>
+				</div>
+			</div>
 		</main>
 
 		<!-- Materialize -->
