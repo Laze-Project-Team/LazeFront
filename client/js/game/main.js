@@ -381,7 +381,7 @@ export function connect4(callback){
                             break;
                         default:
                             if (eventHandlers.hasOwnProperty(data.type)) {
-                                dataBytes = Uint8Array.from(data.data);
+                                let dataBytes = Uint8Array.from(data.data);
                                 var bytes = new Uint8Array(memory.buffer, memorySize, dataBytes.byteLength);
                                 bytes.set(dataBytes, 0);
                                 lazeCall(eventHandlers[data.type], memorySize);
