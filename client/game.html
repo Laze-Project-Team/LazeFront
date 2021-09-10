@@ -20,7 +20,7 @@
 
 		<!-- Materialize -->
 		<link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection" />
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+		<link href="/css/MaterialIcons.css" rel="stylesheet" />
 
 		<!-- My Code -->
 		<link rel="stylesheet" href="/css/game.css" />
@@ -37,26 +37,29 @@
 			<div class="screen-left screen-border"></div>
 			<div class="screen-wrapper">
 				<div class="screen-up screen-border"></div>
-				<div class="game-screen scene-title">
-					<canvas id="game-screen" width="768" height="512"></canvas>
+				<div class="game-wrapper">
+					<div class="shadow"></div>
+					<div class="game-screen scene-title">
+						<canvas id="game-screen" width="768" height="512"></canvas>
 
-					<div id="title-screen" class="screen">
-						<h2>Connect 4</h2>
-						<div class="buttons">
-							<button id="start" class="waves-effect">ゲームスタート</button>
+						<div id="title-screen" class="screen">
+							<h2>Connect 4</h2>
+							<div class="buttons">
+								<button id="start" class="waves-effect">ゲームスタート</button>
+							</div>
 						</div>
-					</div>
 
-					<div id="waiting-screen" class="screen">
-						<h2>対戦相手を待機中</h2>
-						<div class="animation">
-							<div></div>
-							<div></div>
-							<div></div>
-							<div></div>
-						</div>
-						<div class="buttons">
-							<button id="cancel" class="waves-effect">キャンセル</button>
+						<div id="waiting-screen" class="screen">
+							<h2>対戦相手を待機中</h2>
+							<div class="animation">
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+							<div class="buttons">
+								<button id="cancel" class="waves-effect">キャンセル</button>
+							</div>
 						</div>
 					</div>
 				</div>
