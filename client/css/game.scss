@@ -1,0 +1,179 @@
+@import 'common';
+
+$back-color: #f8f9fa;
+$main-color: #18bc9c;
+$sub-color: #2c3e50;
+
+main {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: $back-color;
+
+	.screen-border {
+		flex: 1;
+		position: relative;
+		z-index: 20;
+		background-color: $back-color;
+
+		&.screen-right,
+		&.screen-left {
+			height: 100%;
+		}
+		&.screen-up,
+		&.screen-bottom {
+			width: 100%;
+		}
+	}
+	.screen-wrapper {
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.game-screen {
+	position: relative;
+	border-radius: 8px;
+	width: 800px;
+	height: 450px;
+	background-color: white;
+	overflow: hidden;
+	box-shadow: rgba(0, 27, 56, 0.08) 0px 4px 16px;
+
+	& > * {
+		position: absolute;
+		visibility: hidden;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	&.scene-transition {
+		&::before {
+			content: '';
+			display: inline-block;
+			position: relative;
+			top: 50%;
+			left: 50%;
+			width: 0;
+			height: 0;
+			padding: 0;
+			z-index: 10;
+			background-color: $sub-color;
+			border: solid $sub-color 0px;
+			border-radius: 50%;
+			transform: translate(-50%, -50%);
+
+			animation: scene-transition 1s ease-in-out;
+			@keyframes scene-transition {
+				49% {
+					background-color: $sub-color;
+				}
+				50% {
+					border-width: 480px;
+					padding: 0;
+					background-color: transparent;
+				}
+				100% {
+					padding: 480px;
+					border-width: 0;
+					background-color: transparent;
+				}
+			}
+		}
+	}
+
+	&.scene-title #title-screen,
+	&.scene-waiting #waiting-screen,
+	&.scene-game #game-screen {
+		visibility: visible;
+	}
+}
+
+.screen {
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+
+	h2 {
+		margin: 64px 0 16px 0;
+		font-weight: bold;
+		font-size: 3rem;
+		text-align: center;
+	}
+
+	.buttons {
+		margin: auto 0 64px 0;
+		display: flex;
+		justify-content: center;
+
+		button {
+			font-size: 2rem;
+			cursor: pointer;
+			background-color: $main-color;
+			color: white;
+			font-weight: bold;
+			border-radius: 4px;
+			padding: 16px;
+			border: none;
+
+			transition: background-color 0.2s;
+			&:hover {
+				background-color: darken($main-color, 5%);
+			}
+		}
+	}
+}
+
+#title-screen {
+	h2 {
+		font-size: 4rem;
+	}
+}
+
+#waiting-screen {
+	.animation {
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		div {
+			width: 64px;
+			height: 64px;
+			border-radius: 50%;
+			margin: 0 16px;
+			background-size: 200%;
+			background-position: right;
+
+			&.load {
+				background-image: linear-gradient(to left, $main-color 50%, $sub-color 50%);
+				animation: load 0.5s ease forwards;
+			}
+			&:not(.load) {
+				background-image: linear-gradient(to left, $sub-color 50%, $main-color 50%);
+				animation: unload 0.5s ease forwards;
+			}
+
+			@keyframes load {
+				to {
+					background-position: left;
+				}
+			}
+			@keyframes unload {
+				to {
+					background-position: left;
+				}
+			}
+		}
+		@for $i from 0 to 4 {
+			div:nth-child(#{$i + 1}) {
+				animation-delay: #{$i * 0.6 + 1}s;
+			}
+		}
+	}
+}
