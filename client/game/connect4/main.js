@@ -690,7 +690,7 @@ function _loadTexture(gl, url) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         }
     };
-    image.src = url;
+    image.src = '/'+url;
 
     webglTextures.push(texture);
     return webglTextures.length - 1;
