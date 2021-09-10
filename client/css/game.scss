@@ -169,7 +169,8 @@ main div.screen-border.screen-left {
 
 	&.scene-title #title-screen,
 	&.scene-waiting #waiting-screen,
-	&.scene-how-to-play #how-to-play-screen {
+	&.scene-how-to-play #how-to-play-screen,
+	&.scene-game #game-screen {
 		visibility: visible;
 	}
 }
