@@ -10,13 +10,14 @@ main {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
 	background-color: $back-color;
 
 	.screen-border {
 		flex: 1;
 		position: relative;
 		z-index: 20;
-		background-color: $back-color;
+		background: inherit;
 
 		&.screen-right,
 		&.screen-left {
@@ -29,8 +30,88 @@ main {
 	}
 	.screen-wrapper {
 		height: 100vh;
+		background: inherit;
 		display: flex;
 		flex-direction: column;
+	}
+}
+
+main div.screen-border.screen-left {
+	padding: 0 48px;
+	flex: 0;
+}
+.screen-right {
+	padding: 0 0 0 64px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	h3 {
+		padding: 8px 0 8px 16px;
+		font-size: 2rem;
+		border-bottom: solid $main-color 5px;
+	}
+
+	p {
+		padding: 0 32px 0 16px;
+		font-size: 1.2rem;
+	}
+
+	.qr-wrapper {
+		display: flex;
+
+		p {
+			padding-right: 0;
+		}
+
+		.qr {
+			margin: 0 16px;
+		}
+	}
+}
+
+.screen-up {
+	.title {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 16px 0;
+		height: calc(100% - 32px);
+
+		background-image: url('/assets/icons/logo_caption.png');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+}
+
+.screen-bottom {
+	display: flex;
+	flex-direction: column;
+
+	.tip {
+		margin: auto 0 16px 0;
+		padding: 16px 0 0 0;
+		border-top: solid darken($back-color, 15%) 1px;
+		text-align: center;
+		color: darken($back-color, 40%);
+	}
+}
+
+.game-wrapper {
+	position: relative;
+
+	.shadow {
+		position: absolute;
+		top: 0;
+		left: 0;
+		box-shadow: rgba(0, 27, 56, 0.08) 0px 4px 16px;
+		width: 100%;
+		height: 100%;
+		border-radius: 8px;
+		z-index: 30;
+		pointer-events: none;
 	}
 }
 
@@ -41,7 +122,6 @@ main {
 	height: 480px;
 	background-color: white;
 	overflow: hidden;
-	box-shadow: rgba(0, 27, 56, 0.08) 0px 4px 16px;
 
 	& > * {
 		position: absolute;
@@ -89,7 +169,7 @@ main {
 
 	&.scene-title #title-screen,
 	&.scene-waiting #waiting-screen,
-	&.scene-game #game-screen {
+	&.scene-how-to-play #how-to-play-screen {
 		visibility: visible;
 	}
 }
@@ -98,8 +178,10 @@ main {
 	background-color: white;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 
 	h2 {
+		z-index: 1;
 		margin: 64px 0 16px 0;
 		font-weight: bold;
 		font-size: 3rem;
@@ -107,36 +189,180 @@ main {
 	}
 
 	.buttons {
-		margin: auto 0 64px 0;
+		margin: auto auto 64px auto;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
+		width: 240px;
 
 		button {
+			margin-top: 32px;
 			font-size: 2rem;
 			cursor: pointer;
 			background-color: $main-color;
+			&.sub {
+				background-color: $sub-color;
+			}
 			color: white;
 			font-weight: bold;
 			border-radius: 4px;
-			padding: 16px;
+			padding: 12px;
 			border: none;
 
 			transition: background-color 0.2s;
 			&:hover {
 				background-color: darken($main-color, 5%);
+				&.sub {
+					background-color: darken($sub-color, 5%);
+				}
 			}
 		}
 	}
 }
 
+#cancel {
+	display: none;
+}
+
 #title-screen {
+	display: flex;
+	flex-direction: row;
+
+	& > * {
+		height: 100%;
+	}
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+		background: linear-gradient(45deg, rgba($main-color, 0.1), rgba($main-color, 0.3));
+	}
+
+	.title {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.pieces {
+		width: 200px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		div {
+			width: 64px;
+			height: 64px;
+			border-radius: 50%;
+			margin: 16px 0;
+		}
+		&.color-main > div {
+			background-color: $main-color;
+		}
+		&.color-sub > div {
+			background-color: $sub-color;
+		}
+	}
+
 	h2 {
 		font-size: 4rem;
 	}
 }
 
+#how-to-play-screen {
+	h2 {
+		margin-top: 32px;
+	}
+
+	.how-to-play {
+		display: flex;
+
+		.descriptions {
+			padding: 8px 32px;
+			font-size: 1.1rem;
+		}
+		.sample-board {
+			margin-right: 16px;
+		}
+	}
+}
+
+.board {
+	table-layout: fixed;
+	border-collapse: separate;
+	width: 288px;
+	border-radius: 8px;
+	background-color: darken($back-color, 10%);
+	padding: 4px;
+
+	tr {
+		border: none;
+		height: 32px;
+
+		td {
+			display: inline-block;
+			border: none;
+			margin: 4px;
+			padding: 16px;
+			border-radius: 50%;
+			background-color: white;
+
+			&.main {
+				background-color: $main-color;
+			}
+			&.sub {
+				background-color: $sub-color;
+			}
+			&.laze {
+				background-image: url('/assets/icons/logo.png');
+				background-position: center;
+				background-size: 70%;
+				background-repeat: no-repeat;
+			}
+		}
+	}
+}
+
 #waiting-screen {
+	.ripples {
+		div {
+			position: absolute;
+			width: 0;
+			height: 0;
+			transform: translate(-50%, -50%);
+			border-radius: 50%;
+			border: solid rgba($main-color, 0.4) 2px;
+			opacity: 0;
+
+			animation: ripple 2s cubic-bezier(0.25, 1, 1, 1) forwards;
+			@keyframes ripple {
+				from {
+					opacity: 1;
+					padding: 4px;
+				}
+				to {
+					padding: 100px;
+					opacity: 0;
+				}
+			}
+		}
+
+		@for $i from 0 to 3 {
+			div:nth-child(#{$i + 1}) {
+				animation-delay: #{$i * 0.3}s;
+			}
+		}
+	}
+
 	.animation {
+		z-index: 1;
 		flex: 1;
 		display: flex;
 		justify-content: center;
@@ -146,6 +372,7 @@ main {
 			width: 64px;
 			height: 64px;
 			border-radius: 50%;
+			border: solid white 4px;
 			margin: 0 16px;
 			background-size: 200%;
 			background-position: right;
