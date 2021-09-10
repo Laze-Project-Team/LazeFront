@@ -33,9 +33,37 @@
 
 		<h1 hidden>Lazeゲーム</h1>
 
-		<div class="game-screen">
-			<canvas id="game-screen"></canvas>
-		</div>
+		<main>
+			<div class="screen-left screen-border"></div>
+			<div class="screen-wrapper">
+				<div class="screen-up screen-border"></div>
+				<div class="game-screen scene-title">
+					<canvas id="game-screen" width="768" height="512"></canvas>
+
+					<div id="title-screen" class="screen">
+						<h2>Connect 4</h2>
+						<div class="buttons">
+							<button id="start" class="waves-effect">ゲームスタート</button>
+						</div>
+					</div>
+
+					<div id="waiting-screen" class="screen">
+						<h2>対戦相手を待機中</h2>
+						<div class="animation">
+							<div></div>
+							<div></div>
+							<div></div>
+							<div></div>
+						</div>
+						<div class="buttons">
+							<button id="cancel" class="waves-effect">キャンセル</button>
+						</div>
+					</div>
+				</div>
+				<div class="screen-bottom screen-border"></div>
+			</div>
+			<div class="screen-right screen-border"></div>
+		</main>
 
 		<!-- Materialize -->
 		<script type="text/javascript" src="/js/materialize.min.js"></script>
