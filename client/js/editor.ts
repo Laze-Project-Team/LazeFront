@@ -595,6 +595,9 @@ socket.on('loadedProject', (result: loadedProject) => {
 	if (currentContents.filter((content) => content.path === 'main.laze').length > 0) {
 		loadFile('main.laze');
 	}
+
+	// unsaved外す
+	$('.current-file').removeClass('unsaved');
 });
 interface contextObject {
 	name: string;
