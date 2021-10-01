@@ -590,6 +590,11 @@ socket.on('loadedProject', (result: loadedProject) => {
 
 	// モーダル閉じる
 	$('#overlay-load-project').removeClass('show');
+
+	// main.lazeがあれば開く
+	if (currentContents.filter((content) => content.path === 'main.laze').length > 0) {
+		loadFile('main.laze');
+	}
 });
 interface contextObject {
 	name: string;
@@ -607,6 +612,7 @@ function contextmenu(contexts: contextObject[], e: Event) {
 		menu.append(item);
 	}
 
+	// @ts-ignore
 	menu.css({ top: `${e.pageY}px`, left: `${e.pageX}px` });
 }
 $(() => {
