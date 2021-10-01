@@ -17,26 +17,9 @@ const socket = io('');
 
 $(() => {
 	// ボタン
-	$('#btn-load').on('click', loadProject);
 	$('#btn-save').on('click', () => save(editor.getValue()));
 	$('#btn-compile').on('click', () => compile(editor));
-	$('#btn-newproject').on('click', newProject);
 	$('#btn-newfile').on('click', () => newFile('file', ''));
-
-	// newProject
-	$('#project-name').on('keyup', () => ($('#project-name').val() ? $('#setname-submit').prop('disabled', false) : $('#setname-submit').prop('disabled', true)));
-	$('#setname-cancel').on('click', setNameCancel);
-	$('#setname').on('submit', setNewProjectName);
-	// loadProject
-	$('#selectname-cancel').on('click', selectNameCancel);
-	$('#selectname').on('submit', selectName);
-
-	// modal close
-	$(document).on('keydown', (e) => {
-		if (e.key === 'Escape') {
-			$('.overlay').removeClass('show');
-		}
-	});
 
 	const adjustCanvasSize = (direction: 'x' | 'y') => {
 		if (direction === 'x') {
@@ -83,15 +66,6 @@ $(() => {
 	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
 	canvas.width = 1280;
 	canvas.height = 720;
-
-	// アカウントのステータス更新
-	updateAccount();
-
-	// ファイルロード
-	socket.on('loadedFile', (result: { fileContent: string; logValue: string; style: string }) => {
-		editor.setValue(result.fileContent);
-		logConsole(result.logValue, result.style);
-	});
 });
 
 // window閉じる時の警告
@@ -107,13 +81,7 @@ const editorPrepared = setInterval(() => {
 }, 50);
 
 // 変数
-let editFileName = 'test.lang';
 let projectName = 'Project1';
-let account = {
-	id: 'guest',
-	username: 'ゲスト',
-	avatar: '',
-};
 
 // ログ出力
 function logConsole(value: string | string[], style = 'log') {
@@ -152,15 +120,6 @@ function logPopup(value: string, style = 'info') {
 
 // ログ出力
 socket.on('output', (result: { value: string | string[]; style: 'log' | 'err' | 'info' }) => logConsole(result.value, result.style));
-
-// 保存済み
-socket.on('saved', (result: saveResult) => {
-	// ログ
-	logConsole(result.value, result.style);
-
-	// ポップアップ
-	logPopup(result.value, result.style);
-});
 
 // セーブ
 function save(content: string) {
@@ -612,39 +571,6 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 	}
 });
 // ============ WebAssembly関係 ==========
-
-// プロジェクトの作成をキャンセル
-function setNameCancel() {
-	$('#overlay-create-project').removeClass('show');
-	$('#setname').off('submit');
-}
-function selectNameCancel() {
-	$('#overlay-load-project').removeClass('show');
-	$('#selectname').off('submit');
-}
-
-// プロジェクトのロード
-function loadProject() {
-	fetch(`/projectlist?user=${account.id}`)
-		.then((result) => result.json())
-		.then((result: string[]) => {
-			result.forEach((projectName) => {
-				$('#project-selecter').append(`<option value="${projectName}">${projectName}</option>`);
-			});
-			$('#overlay-load-project').addClass('show');
-		});
-	$('#project-selecter').html('');
-}
-function selectName() {
-	const projectName = $('#project-selecter').val()?.toString();
-	if (projectName) {
-		socket.emit('loadProject', {
-			projectName: projectName,
-		});
-		$('.overlay').removeClass('show');
-	}
-	return false;
-}
 
 // ロード完了 → ファイルツリーに反映
 let currentContents: contentObject[] = [];
@@ -1120,55 +1046,3 @@ $(() => {
 			});
 	});
 });
-
-// 新しいプロジェクト
-function newProject() {
-	$('#project-name').val('');
-	$('#setname-submit').prop('disabled', true);
-	$('#project-name-warning').text('');
-	$('#overlay-create-project').addClass('show');
-}
-function setNewProjectName() {
-	const projectName = $('#project-name').val()?.toString();
-	if (projectName) {
-		if (projectName.indexOf('/') > -1) {
-			$('#project-name-warning').text('/は使えません');
-		} else {
-			socket.emit('newProject', {
-				projectName: projectName,
-			});
-			$('.overlay').removeClass('show');
-		}
-	}
-	return false;
-}
-socket.on('newProjectCreated', (result: { success: boolean; value: string; style: string; projectName: string }) => {
-	logConsole(result.value, result.style);
-	if (result.success)
-		socket.emit('loadProject', {
-			projectName: result.projectName,
-		});
-});
-
-// ログインイベント
-socket.on('login', (data: userData) => {
-	account = data;
-	updateAccount();
-});
-
-// アカウントのステータス更新
-function updateAccount() {
-	// 名前
-	$('#account-name').text(account.username);
-	// アバター画像
-	$('#avatar-img').attr('src', `/avatar/id?id=${account.id}`);
-	// ドロップダウン更新
-	const accountMenu = $('ul[aria-labelledby="account-menu"]');
-	if (account.id === 'guest') {
-		accountMenu.removeClass('user');
-		accountMenu.addClass('guest');
-	} else {
-		accountMenu.addClass('user');
-		accountMenu.removeClass('guest');
-	}
-}
