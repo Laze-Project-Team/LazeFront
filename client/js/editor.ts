@@ -282,7 +282,7 @@ let importObject = {
 			// char = char.filter(char => char != 0);
 			// console.log(new TextDecoder('utf-8').decode(char));
 			logConsole(`${Number(arg)}`);
-			console.log(Number(arg));
+			// console.log(Number(arg));
 		},
 		logstring: function (offset: number, length: number) {
 			// console.log(Number(length) * 4);
@@ -291,7 +291,7 @@ let importObject = {
 			bytes = bytes.filter((element) => element != 0);
 			let string = new TextDecoder('utf-8').decode(bytes);
 			logConsole(string);
-			console.log(string);
+			// console.log(string);
 		},
 		logMatrix: function (offset: number) {
 			const buffer = memory.buffer.slice(offset, 128 + offset);
