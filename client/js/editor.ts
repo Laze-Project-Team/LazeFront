@@ -496,7 +496,7 @@ const fsSource = ` #version 300 es
   out vec4 FragColor;
 
   void main() {
-    float ambientStrength = 0.2;
+    float ambientStrength = 0.4;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(vNormal);
