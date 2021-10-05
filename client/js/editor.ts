@@ -33,6 +33,20 @@ $(() => {
 		adjustCanvasSize('x');
 	}, 100);
 
+	let previous = {
+		x: $(window).width(),
+		y: $(window).height(),
+	};
+	$(window).on('resize', () => {
+		if (previous.x === $(window).width()) adjustCanvasSize('y');
+		else adjustCanvasSize('x');
+
+		previous = {
+			x: $(window).width(),
+			y: $(window).height(),
+		};
+	});
+
 	// リサイズ可能に
 	$('.explorer').resizable({
 		handleSelector: '.exp-spliter',
@@ -75,8 +89,12 @@ window.onbeforeunload = function (e) {
 
 const editorPrepared = setInterval(() => {
 	if (document.getElementsByClassName('monaco-editor')) {
+		// ロード完了
 		document.getElementById('loading-screen')!.style.display = 'none';
 		clearInterval(editorPrepared);
+
+		// サンプル "ようこそ" を読み込み
+		socket.emit('loadProject', { projectName: 'ようこそ' });
 	}
 }, 50);
 
