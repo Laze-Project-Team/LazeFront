@@ -8,7 +8,26 @@
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./client/client/js/game.ts":
+/*!**********************************!*\
+  !*** ./client/client/js/game.ts ***!
+  \**********************************/
+/***/ (() => {
+
+eval("\r\n\n\n//# sourceURL=webpack://laze-compiler-web/./client/client/js/game.ts?");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
 /******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = {};
+/******/ 	__webpack_modules__["./client/client/js/game.ts"]();
 /******/ 	
 /******/ })()
 ;

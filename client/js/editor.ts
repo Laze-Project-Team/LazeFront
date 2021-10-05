@@ -17,30 +17,9 @@ const socket = io('');
 
 $(() => {
 	// ボタン
-	$('#btn-load').on('click', loadProject);
 	$('#btn-save').on('click', () => save(editor.getValue()));
 	$('#btn-compile').on('click', () => compile(editor));
-	$('#btn-newproject').on('click', newProject);
 	$('#btn-newfile').on('click', () => newFile('file', ''));
-
-	// newProject
-	$('#project-name').on('keyup', () => ($('#project-name').val() ? $('#setname-submit').prop('disabled', false) : $('#setname-submit').prop('disabled', true)));
-	$('#setname-cancel').on('click', setNameCancel);
-	$('#setname').on('submit', setNewProjectName);
-	// loadProject
-	$('#selectname-cancel').on('click', selectNameCancel);
-	$('#selectname').on('submit', selectName);
-
-	// modal close
-	$(document).on('keydown', (e) => {
-		if (e.key === 'Escape') {
-			$('.overlay').removeClass('show');
-		}
-	});
-
-	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-	canvas.width = 1280;
-	canvas.height = 720;
 
 	const adjustCanvasSize = (direction: 'x' | 'y') => {
 		if (direction === 'x') {
@@ -98,14 +77,9 @@ $(() => {
 		resizeHeight: false,
 	});
 
-	// アカウントのステータス更新
-	updateAccount();
-
-	// ファイルロード
-	socket.on('loadedFile', (result: { fileContent: string; logValue: string; style: string }) => {
-		editor.setValue(result.fileContent);
-		logConsole(result.logValue, result.style);
-	});
+	const canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
+	canvas.width = 1280;
+	canvas.height = 720;
 });
 
 // window閉じる時の警告
@@ -115,19 +89,17 @@ window.onbeforeunload = function (e) {
 
 const editorPrepared = setInterval(() => {
 	if (document.getElementsByClassName('monaco-editor')) {
+		// ロード完了
 		document.getElementById('loading-screen')!.style.display = 'none';
 		clearInterval(editorPrepared);
+
+		// サンプル "ようこそ" を読み込み
+		socket.emit('loadProject', { projectName: 'ようこそ' });
 	}
 }, 50);
 
 // 変数
-let editFileName = 'test.lang';
 let projectName = 'Project1';
-let account = {
-	id: 'guest',
-	username: 'ゲスト',
-	avatar: '',
-};
 
 // ログ出力
 function logConsole(value: string | string[], style = 'log') {
@@ -166,15 +138,6 @@ function logPopup(value: string, style = 'info') {
 
 // ログ出力
 socket.on('output', (result: { value: string | string[]; style: 'log' | 'err' | 'info' }) => logConsole(result.value, result.style));
-
-// 保存済み
-socket.on('saved', (result: saveResult) => {
-	// ログ
-	logConsole(result.value, result.style);
-
-	// ポップアップ
-	logPopup(result.value, result.style);
-});
 
 // セーブ
 function save(content: string) {
@@ -337,7 +300,7 @@ let importObject = {
 			// char = char.filter(char => char != 0);
 			// console.log(new TextDecoder('utf-8').decode(char));
 			logConsole(`${Number(arg)}`);
-			console.log(Number(arg));
+			// console.log(Number(arg));
 		},
 		logstring: function (offset: number, length: number) {
 			// console.log(Number(length) * 4);
@@ -346,7 +309,7 @@ let importObject = {
 			bytes = bytes.filter((element) => element != 0);
 			let string = new TextDecoder('utf-8').decode(bytes);
 			logConsole(string);
-			console.log(string);
+			// console.log(string);
 		},
 		logMatrix: function (offset: number) {
 			const buffer = memory.buffer.slice(offset, 128 + offset);
@@ -627,39 +590,6 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 });
 // ============ WebAssembly関係 ==========
 
-// プロジェクトの作成をキャンセル
-function setNameCancel() {
-	$('#overlay-create-project').removeClass('show');
-	$('#setname').off('submit');
-}
-function selectNameCancel() {
-	$('#overlay-load-project').removeClass('show');
-	$('#selectname').off('submit');
-}
-
-// プロジェクトのロード
-function loadProject() {
-	fetch(`/projectlist?user=${account.id}`)
-		.then((result) => result.json())
-		.then((result: string[]) => {
-			result.forEach((projectName) => {
-				$('#project-selecter').append(`<option value="${projectName}">${projectName}</option>`);
-			});
-			$('#overlay-load-project').addClass('show');
-		});
-	$('#project-selecter').html('');
-}
-function selectName() {
-	const projectName = $('#project-selecter').val()?.toString();
-	if (projectName) {
-		socket.emit('loadProject', {
-			projectName: projectName,
-		});
-		$('.overlay').removeClass('show');
-	}
-	return false;
-}
-
 // ロード完了 → ファイルツリーに反映
 let currentContents: contentObject[] = [];
 socket.on('loadedProject', (result: loadedProject) => {
@@ -678,6 +608,14 @@ socket.on('loadedProject', (result: loadedProject) => {
 
 	// モーダル閉じる
 	$('#overlay-load-project').removeClass('show');
+
+	// main.lazeがあれば開く
+	if (currentContents.filter((content) => content.path === 'main.laze').length > 0) {
+		loadFile('main.laze');
+	}
+
+	// unsaved外す
+	$('.current-file').removeClass('unsaved');
 });
 interface contextObject {
 	name: string;
@@ -1135,55 +1073,3 @@ $(() => {
 			});
 	});
 });
-
-// 新しいプロジェクト
-function newProject() {
-	$('#project-name').val('');
-	$('#setname-submit').prop('disabled', true);
-	$('#project-name-warning').text('');
-	$('#overlay-create-project').addClass('show');
-}
-function setNewProjectName() {
-	const projectName = $('#project-name').val()?.toString();
-	if (projectName) {
-		if (projectName.indexOf('/') > -1) {
-			$('#project-name-warning').text('/は使えません');
-		} else {
-			socket.emit('newProject', {
-				projectName: projectName,
-			});
-			$('.overlay').removeClass('show');
-		}
-	}
-	return false;
-}
-socket.on('newProjectCreated', (result: { success: boolean; value: string; style: string; projectName: string }) => {
-	logConsole(result.value, result.style);
-	if (result.success)
-		socket.emit('loadProject', {
-			projectName: result.projectName,
-		});
-});
-
-// ログインイベント
-socket.on('login', (data: userData) => {
-	account = data;
-	updateAccount();
-});
-
-// アカウントのステータス更新
-function updateAccount() {
-	// 名前
-	$('#account-name').text(account.username);
-	// アバター画像
-	$('#avatar-img').attr('src', `/avatar/id?id=${account.id}`);
-	// ドロップダウン更新
-	const accountMenu = $('ul[aria-labelledby="account-menu"]');
-	if (account.id === 'guest') {
-		accountMenu.removeClass('user');
-		accountMenu.addClass('guest');
-	} else {
-		accountMenu.addClass('user');
-		accountMenu.removeClass('guest');
-	}
-}
