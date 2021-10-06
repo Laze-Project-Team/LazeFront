@@ -2,6 +2,7 @@ import editor from './monaco/src/js/main';
 import * as monaco from 'monaco-editor';
 import moment from 'moment';
 import io from 'socket.io-client';
+import { parse } from 'path';
 
 // セーブ
 editor.addAction({
@@ -93,8 +94,21 @@ const editorPrepared = setInterval(() => {
 		document.getElementById('loading-screen')!.style.display = 'none';
 		clearInterval(editorPrepared);
 
-		// サンプル "ようこそ" を読み込み
-		socket.emit('loadProject', { projectName: 'ようこそ' });
+		const contents = localStorage.getItem('contents');
+		const dir = localStorage.getItem('dir');
+		console.log(contents, dir);
+
+		if (contents && dir) {
+			currentContents = JSON.parse(contents);
+			currentDir = JSON.parse(dir);
+			parseDir(currentDir);
+
+			const main = currentContents.filter((file) => file.path === 'main.laze');
+			if (main.length > 0) loadFile('main.laze');
+		} else {
+			// サンプル "ようこそ" を読み込み
+			socket.emit('loadProject', { projectName: 'ようこそ' });
+		}
 	}
 }, 50);
 
@@ -142,6 +156,7 @@ socket.on('output', (result: { value: string | string[]; style: 'log' | 'err' | 
 // セーブ
 function save(content: string) {
 	currentContents.filter((content) => content.path === currentFile)[0].content = content;
+	localStorage.setItem('contents', JSON.stringify(currentContents));
 	$('.current-file').removeClass('unsaved');
 }
 
@@ -720,6 +735,7 @@ function parseDir(dir: dirObject, openInfo: string[] = [], activeInfo: string = 
 
 	projectName = sortDir.name;
 	currentDir = sortDir;
+	localStorage.setItem('dir', JSON.stringify(currentDir));
 	tree(root, sortDir, '');
 }
 const fileSort = (a: { type: 'file' | 'folder'; name: string }, b: { type: 'file' | 'folder'; name: string }) => {
