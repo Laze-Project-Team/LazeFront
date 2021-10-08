@@ -560,6 +560,35 @@ const lightFs = `#version 300 es
     FragColor = vec4(1.0);
   }
 `;
+const pointVs = 
+` #version 300 es
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+  layout (location = 0) in vec3 aVertexPosition;
+
+  uniform mat4 uProjMat;
+  uniform mat4 uModelMat;
+  uniform mat4 uViewMat;
+
+  void main() {
+    gl_Position = uProjMat * uViewMat * uModelMat * vec4(aVertexPosition, 1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+const pointFs = 
+`#version 300 es
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  uniform vec3 objectColor;
+
+  out vec4 FragColor;
+  void main(){
+    FragColor = vec4(objectColor, 1.0);
+  }
+`;
 
 let interval: any;
 
@@ -581,6 +610,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				let instance = results.instance;
 				initShaderProgram(gl!, vsSource, fsSource);
 				initShaderProgram(gl!, vsSource, lightFs);
+				initShaderProgram(gl!, pointVs, pointFs);
 				var first = performance.now();
 				// document.getElementById("container").textContent = instance.exports.main();
 				// Set the pixel data in the module's memory
@@ -594,7 +624,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				const draw = () => {
 					gl?.viewport(0, 0, canvas.width, canvas.height);
 					loopFunc();
-				};
+				}; 
 				if (instance.exports.loop) interval = setInterval(draw, 1000 / 60);
 				// console.log(performance.now() - first);
 			})
