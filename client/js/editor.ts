@@ -219,8 +219,8 @@ window.onload = function () {
 };
 
 function updatePosition(e: MouseEvent) {
-	mouseX = e.clientX;
-	mouseY = e.clientY;
+	mouseX += e.movementX;
+	mouseY += e.movementY;
 }
 
 // ============ WebAssembly関係 ==========
