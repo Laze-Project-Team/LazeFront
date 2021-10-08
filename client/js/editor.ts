@@ -216,12 +216,11 @@ window.onload = function () {
 		},
 		false
 	);
-    canvas.addEventListener("mousemove", updatePosition, false);
 };
 
 function updatePosition(e: MouseEvent) {
-	mouseX = ((e.clientX - canvas.getBoundingClientRect().left) - canvas.clientWidth / 2) / (canvas.clientWidth / 2);
-    mouseY = -(((e.clientY - canvas.getBoundingClientRect().top) - canvas.clientHeight / 2) / (canvas.clientHeight / 2));
+	mouseX += e.movementX;
+	mouseY += e.movementY;
 }
 
 // ============ WebAssembly関係 ==========
@@ -328,11 +327,11 @@ function _loadTexture(gl:WebGL2RenderingContext, url: string) {
 	};
 	image.src = url;
 
-	webglTextures.push(texture!);
+	webglTextures.push(texture);
 	return webglTextures.length - 1;
 }
 
-function isPowerOf2(value:number) {
+function isPowerOf2(value) {
 	return (value & (value - 1)) == 0;
 }
 let importObject = {
