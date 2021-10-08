@@ -674,6 +674,50 @@ const pointFs =
     FragColor = vec4(objectColor, 1.0);
   }
 `;
+const vsSource2DTexture =
+    `
+  attribute vec3 aVertexPosition;
+  attribute vec2 aTexCoord;
+
+  uniform mat4 model;
+  uniform mat4 projection;
+
+  varying highp vec2 vTexCoord; 
+  void main() {
+    gl_Position = model * projection * vec4(aVertexPosition, 1.0);
+    vTexCoord = aTexCoord;
+  }
+`;
+const fsSource2DTexture =
+    `
+  varying highp vec2 vTexCoord;
+
+  uniform sampler2D uSampler;
+
+  void main() {
+    gl_FragColor = texture2D(uSampler, vTexCoord);
+  }
+`;
+const vsSource2DNoTexture =
+    `
+  attribute vec2 aVertexPosition;
+
+  uniform mat4 model;
+  uniform mat4 projection;
+
+  void main() {
+    gl_Position = model * projection * vec4(aVertexPosition, 0.0, 1.0);
+  }
+`;
+const fsSource2DNoTexture =
+    `
+ uniform highp vec3 objectColor;
+ uniform highp float transparency;
+
+  void main() {
+    gl_FragColor = vec4(objectColor, transparency);
+  }
+`;
 
 let interval: any;
 
@@ -696,7 +740,8 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
 				initShaderProgram(gl!, vsSource, fsSource);
 				initShaderProgram(gl!, vsSource, lightFs);
 				initShaderProgram(gl!, pointVs, pointFs);
-				var first = performance.now();
+				initShaderProgram(gl!, vsSource2DTexture, fsSource2DTexture);
+				initShaderProgram(gl!, vsSource2DNoTexture, fsSource2DNoTexture);
 				// document.getElementById("container").textContent = instance.exports.main();
 				// Set the pixel data in the module's memory
 				const memorySizeFunc = instance.exports.memorySize as CallableFunction;
