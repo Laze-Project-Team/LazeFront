@@ -170,8 +170,10 @@ function compile(editor: monaco.editor.IStandaloneCodeEditor) {
 }
 // == mouseとkeyboard(canvas用)
 let canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-let mouseX = 0.0;
-let mouseY = 0.0;
+let relativeMouseX = 0.0;
+let relativeMouseY = 0.0;
+let absoluteMouseX = 0.0;
+let absoluteMouseY = 0.0;
 let mousePressed = false;
 let memorySize = 0;
 let lastDownTarget: EventTarget | null;
@@ -219,8 +221,10 @@ window.onload = function () {
 };
 
 function updatePosition(e: MouseEvent) {
-	mouseX += e.movementX;
-	mouseY += e.movementY;
+	relativeMouseX = ((e.clientX - canvas.getBoundingClientRect().left) - canvas.clientWidth / 2) / (canvas.clientWidth / 2);
+    relativeMouseY = -(((e.clientY - canvas.getBoundingClientRect().top) - canvas.clientHeight / 2) / (canvas.clientHeight / 2));
+	absoluteMouseX += e.movementX;
+	absoluteMouseY += e.movementY;
 }
 
 // ============ WebAssembly関係 ==========
@@ -373,11 +377,17 @@ let importObject = {
 		checkMousePress: function () {
 			return BigInt(mousePressed);
 		},
-		checkMouseX: function () {
-			return mouseX;
+		checkRelativeMouseX: function () {
+			return relativeMouseX;
 		},
-		checkMouseY: function () {
-			return mouseY;
+		checkRelativeMouseY: function () {
+			return relativeMouseY;
+		},
+		checkAbsoluteMouseX: function() {
+			return absoluteMouseX;
+		},
+		checkAbsoluteMouseY: function() {
+			return absoluteMouseY;
 		},
 		rand: function () {
 			return Math.random();
