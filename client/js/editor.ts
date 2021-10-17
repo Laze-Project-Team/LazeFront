@@ -706,7 +706,7 @@ const vsSource2DNoTexture =
   uniform mat4 projection;
 
   void main() {
-    gl_Position = model * projection * vec4(aVertexPosition, 0.0, 1.0);
+    gl_Position = projection * model * vec4(aVertexPosition, 0.0, 1.0);
   }
 `;
 const fsSource2DNoTexture =
