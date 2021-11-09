@@ -25,11 +25,9 @@ $(() => {
 
   const adjustCanvasSize = (direction: 'x' | 'y') => {
     if (direction === 'x') {
-      (document.querySelector('.editor-console') as HTMLElement)!.style.height =
-        (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
+      (document.querySelector('.editor-console') as HTMLElement)!.style.height = (canvas.clientWidth * 9) / 16 + document.querySelector('.editor-output-label')!.clientHeight + 'px';
     } else {
-      (document.querySelector('.editor-output') as HTMLElement)!.style.width =
-        document.querySelector('.editor-console')!.clientWidth - (canvas.clientHeight * 16) / 9 + 'px';
+      (document.querySelector('.editor-output') as HTMLElement)!.style.width = document.querySelector('.editor-console')!.clientWidth - (canvas.clientHeight * 16) / 9 + 'px';
     }
     return true;
   };
@@ -127,9 +125,7 @@ function logConsole(value: string | string[], style = 'log') {
   value.forEach((item) => {
     let output = document.createElement('div');
     output.classList.add(style);
-    output.innerHTML = `<span class="output-value">${item}</span><span class="output-timestamp">${moment().format(
-      'HH:mm'
-    )}</span>`;
+    output.innerHTML = `<span class="output-value">${item}</span><span class="output-timestamp">${moment().format('HH:mm')}</span>`;
     outputArea.append(output);
   });
 
@@ -156,9 +152,7 @@ function logPopup(value: string, style = 'info') {
 }
 
 // ログ出力
-socket.on('output', (result: { value: string | string[]; style: 'log' | 'err' | 'info' }) =>
-  logConsole(result.value, result.style)
-);
+socket.on('output', (result: { value: string | string[]; style: 'log' | 'err' | 'info' }) => logConsole(result.value, result.style));
 
 // セーブ
 function save(content: string) {
@@ -228,12 +222,8 @@ window.onload = function () {
 };
 
 function updatePosition(e: MouseEvent) {
-  relativeMouseX =
-    (e.clientX - canvas.getBoundingClientRect().left - canvas.clientWidth / 2) / (canvas.clientWidth / 2);
-  relativeMouseY = -(
-    (e.clientY - canvas.getBoundingClientRect().top - canvas.clientHeight / 2) /
-    (canvas.clientHeight / 2)
-  );
+  relativeMouseX = (e.clientX - canvas.getBoundingClientRect().left - canvas.clientWidth / 2) / (canvas.clientWidth / 2);
+  relativeMouseY = -((e.clientY - canvas.getBoundingClientRect().top - canvas.clientHeight / 2) / (canvas.clientHeight / 2));
   absoluteMouseX += e.movementX;
   absoluteMouseY += e.movementY;
 }
@@ -452,14 +442,7 @@ let importObject = {
     enable: function (i: number) {
       gl!.enable(i);
     },
-    vertexAttribPointer: function (
-      index: number,
-      size: number,
-      type: number,
-      normalized: number,
-      stride: number,
-      offset: number
-    ) {
+    vertexAttribPointer: function (index: number, size: number, type: number, normalized: number, stride: number, offset: number) {
       gl!.vertexAttribPointer(index, size, type, false, stride, offset);
     },
     enableVertexAttribArray: function (index: number) {
@@ -775,6 +758,7 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
   if (result.success) {
     wasm = result.wasm;
     runProgram();
+    wasmCache(true);
   } else {
     logConsole('compile error', 'err');
   }
@@ -954,94 +938,76 @@ function renameFile(filePath: string) {
   const pathList = filePath.split('/');
   const filename = pathList.pop();
   const dir = pathList.join('/');
-  openModal(
-    '名前の変更',
-    '',
-    [{ id: 'name', name: '変更後の名前', placeholder: filename, required: true }],
-    getInitialButtonWithName('変更'),
-    () => {
-      const rmFilename = $('#modal-field-name').val()!.toString();
-      if (rmFilename.indexOf('/') > -1) {
+  openModal('名前の変更', '', [{ id: 'name', name: '変更後の名前', placeholder: filename, required: true }], getInitialButtonWithName('変更'), () => {
+    const rmFilename = $('#modal-field-name').val()!.toString();
+    if (rmFilename.indexOf('/') > -1) {
+      return {
+        success: false,
+        err: [
+          {
+            id: 'name',
+            message: '使用不可能文字(/)が含まれています',
+          },
+        ],
+      };
+    } else {
+      const rmFilePath = `${dir ? dir + '/' : ''}${rmFilename}`;
+      if ($(`.exp-view li[data-path="${rmFilePath}"]`).length > 0) {
         return {
           success: false,
           err: [
             {
               id: 'name',
-              message: '使用不可能文字(/)が含まれています',
+              message: `${rmFilename} というファイルまたはフォルダはこの場所に既に存在します。別の名前を指定してください。`,
             },
           ],
         };
       } else {
-        const rmFilePath = `${dir ? dir + '/' : ''}${rmFilename}`;
-        if ($(`.exp-view li[data-path="${rmFilePath}"]`).length > 0) {
-          return {
-            success: false,
-            err: [
-              {
-                id: 'name',
-                message: `${rmFilename} というファイルまたはフォルダはこの場所に既に存在します。別の名前を指定してください。`,
-              },
-            ],
-          };
-        } else {
-          renameDir(filePath, rmFilename, rmFilePath);
-          return { success: true };
-        }
+        renameDir(filePath, rmFilename, rmFilePath);
+        return { success: true };
       }
     }
-  );
+  });
 }
 function deleteFile(filePath: string) {
   const filename = filePath.split('/').slice(-1)[0];
-  openModal(
-    'ファイル/フォルダの削除',
-    `${filename} を削除します。削除されたファイルは失われ、復元することはできません。本当に削除してよろしいですか？`,
-    [],
-    getInitialButtonWithName('削除'),
-    () => {
-      deleteDir(filePath);
-      return { success: true };
-    }
-  );
+  openModal('ファイル/フォルダの削除', `${filename} を削除します。削除されたファイルは失われ、復元することはできません。本当に削除してよろしいですか？`, [], getInitialButtonWithName('削除'), () => {
+    deleteDir(filePath);
+    return { success: true };
+  });
 }
 function newFile(type: 'file' | 'folder', dir: string) {
   const name = type === 'file' ? 'ファイル' : 'フォルダ';
-  openModal(
-    `新規${name}作成`,
-    `作成されるディレクトリ：${dir}/`,
-    [{ id: 'name', name: `${name}名`, required: true }],
-    getInitialButtonWithName('作成'),
-    () => {
-      const filename = $('#modal-field-name').val()!.toString();
-      const filePath = `${dir ? dir + '/' : ''}${filename}`;
-      if (filename.indexOf('/') > -1) {
+  openModal(`新規${name}作成`, `作成されるディレクトリ：${dir}/`, [{ id: 'name', name: `${name}名`, required: true }], getInitialButtonWithName('作成'), () => {
+    const filename = $('#modal-field-name').val()!.toString();
+    const filePath = `${dir ? dir + '/' : ''}${filename}`;
+    if (filename.indexOf('/') > -1) {
+      return {
+        success: false,
+        err: [
+          {
+            id: 'name',
+            message: '使用不可能文字(/)が含まれています',
+          },
+        ],
+      };
+    } else {
+      if ($(`.exp-view li[data-path="${filePath}"]`).length > 0) {
         return {
           success: false,
           err: [
             {
               id: 'name',
-              message: '使用不可能文字(/)が含まれています',
+              message: `${filename} というファイルまたはフォルダはこの場所に既に存在します。別の名前を指定してください。`,
             },
           ],
         };
       } else {
-        if ($(`.exp-view li[data-path="${filePath}"]`).length > 0) {
-          return {
-            success: false,
-            err: [
-              {
-                id: 'name',
-                message: `${filename} というファイルまたはフォルダはこの場所に既に存在します。別の名前を指定してください。`,
-              },
-            ],
-          };
-        } else {
-          newDir(type, filename, dir);
-          return { success: true };
-        }
+        newDir(type, filename, dir);
+        return { success: true };
       }
     }
-  );
+  });
 }
 
 function getDirFromPath(path: string, dir: dirObject, lastNode = 0) {
@@ -1110,9 +1076,17 @@ function newDir(type: 'file' | 'folder', name: string, dir: string) {
   }
 }
 
+function wasmCache(cached: boolean) {
+  $('#btn-run').prop('disabled', !cached);
+}
+$(() => wasmCache(false));
+
 function loadFile(path: string) {
   closeFileWarn(() => {
     $('#editor-cover').hide();
+    if (currentFile !== path) {
+      wasmCache(false);
+    }
     currentFile = path;
     $('#footer-filename').text(path.split('/').slice(-1)[0]);
     const content = currentContents.filter((content) => content.path === path);
@@ -1212,22 +1186,12 @@ const getInitialButtonWithName = (name: string) => {
   result[1]!.name = name;
   return result;
 };
-function openModal(
-  title: string,
-  description: string,
-  fields: field[],
-  buttons: Button[] = initialButtons,
-  callback: Function
-) {
+function openModal(title: string, description: string, fields: field[], buttons: Button[] = initialButtons, callback: Function) {
   $('#modal .title').text(title);
   $('#modal .description').text(description);
   $('#modal .fields').html('');
   for (const field of fields) {
-    $('#modal .fields').append(
-      `<div class="field"><label for="modal-field-${field.id}">${field.name}</label>` +
-        getInput(field) +
-        '<small class="warning"></small></div>'
-    );
+    $('#modal .fields').append(`<div class="field"><label for="modal-field-${field.id}">${field.name}</label>` + getInput(field) + '<small class="warning"></small></div>');
   }
   setTimeout(() => {
     $('#modal .fields .field:first-child input').trigger('focus');
