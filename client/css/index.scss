@@ -3,347 +3,370 @@
 $list-content-break: 800px;
 
 header {
-	padding: 8px 16px;
-	background-color: $color-accent;
-	@include mq-down('md') {
-		padding: 8px;
-	}
+  padding: 8px 16px;
+  background-color: $color-accent;
+  @include mq-down('md') {
+    padding: 8px;
+  }
 
-	.row {
-		margin: 0;
+  .row {
+    margin: 0;
 
-		.col {
-			display: flex;
-			align-items: center;
-			height: 40px;
-		}
-	}
+    .col {
+      display: flex;
+      align-items: center;
+      height: 40px;
+    }
+  }
 
-	& > .row > .col > .btn-flat {
-		color: whitesmoke;
-		font-size: 1.2rem;
-		text-decoration: none;
-		border: solid whitesmoke 1px;
+  & > .row > .col > .btn-flat {
+    color: whitesmoke;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border: solid whitesmoke 1px;
 
-		&:hover {
-			color: $color-accent;
-			background-color: whitesmoke;
-		}
-	}
+    &:hover {
+      color: $color-accent;
+      background-color: whitesmoke;
+    }
+  }
 }
 
 $color-logo: #eba059;
 header .row .icon {
-	padding: 0;
+  padding: 0;
 
-	a {
-		padding: 0 8px;
-		display: inline-flex;
-		align-items: center;
-		height: 100%;
-		text-decoration: none;
-		color: $color-logo;
-		font-size: 1.7rem;
-		font-weight: bold;
-		transition: all 0.2s;
-		border-radius: 3px;
+  a {
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    text-decoration: none;
+    color: $color-logo;
+    font-size: 1.7rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    border-radius: 3px;
 
-		img {
-			width: 32px;
-			height: 32px;
-			margin-right: 8px;
-		}
+    img {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
 
-		&:hover {
-			color: $color-logo;
-			background-color: rgba(white, 0.1);
-		}
-	}
+    &:hover {
+      color: $color-logo;
+      background-color: rgba(white, 0.1);
+    }
+  }
 }
 
 .links {
-	a {
-		display: inline-block;
-		margin: 0 10px;
-		font-size: 1.2rem;
-		color: white;
-		text-decoration: none;
-		transition: color 0.2s;
+  a {
+    display: inline-block;
+    margin: 0 10px;
+    font-size: 1.2rem;
+    color: white;
+    text-decoration: none;
+    transition: color 0.2s;
 
-		&:hover {
-			color: rgb(172, 227, 255);
-		}
-	}
+    &:hover {
+      color: rgb(172, 227, 255);
+    }
+  }
 }
 
 .logins {
-	a {
-		margin: 0 2px;
-	}
+  a {
+    margin: 0 2px;
+  }
 }
 
 .mobile {
-	.sidenav-trigger {
-		display: inline-block;
-		width: 32px;
-		height: 32px;
-		padding: 4px;
-		margin-left: 8px;
-		text-align: center;
-		color: whitesmoke;
-	}
+  .sidenav-trigger {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    margin-left: 8px;
+    text-align: center;
+    color: whitesmoke;
+  }
 
-	.sidenav {
-		width: 200px;
+  .sidenav {
+    width: 200px;
 
-		.btn-flat {
-			margin: 0;
-		}
-	}
+    .btn-flat {
+      margin: 0;
+    }
+  }
 }
 
 .my-container {
-	max-width: 100vw;
-	width: 100%;
+  max-width: 100vw;
+  width: 100%;
 
-	.container-wrapper {
-		padding: 32px 16px;
-		max-width: 1024px;
-		margin: 0 auto;
-	}
+  .container-wrapper {
+    padding: 32px 16px;
+    max-width: 1024px;
+    margin: 0 auto;
+  }
 }
 
 .header {
-	margin-bottom: 60px;
+  margin-bottom: 60px;
 
-	.container-wrapper {
-	}
-	.showcase {
-		width: 100%;
+  .container-wrapper {
+  }
+  .showcase {
+    width: 100%;
 
-		img {
-			width: 100%;
-		}
-	}
+    img {
+      width: 100%;
+    }
+  }
 
-	.caption {
-		color: black;
+  .caption {
+    color: black;
 
-		h1 {
-			font-size: 8rem;
-			font-weight: bold;
-		}
-		h2 {
-			font-size: 2rem;
-		}
-	}
+    h1 {
+      font-size: 10rem;
+      font-weight: bold;
+    }
+    h2 {
+      font-size: 2rem;
+    }
+    h3 {
+      margin-left: 16px;
+
+      a {
+        padding: 8px 16px;
+        font-size: 1.5rem;
+
+        background-color: $color-accent;
+        color: white;
+        border-radius: 2px;
+        transition: all 0.1s;
+        box-shadow: 2px 2px 2px 1px rgba(black, 0.1);
+
+        &:hover {
+          background-color: rgba($color-accent, 0.95);
+          color: white;
+        }
+        &:active {
+          background-color: rgba($color-accent, 0.9);
+          color: white;
+        }
+      }
+    }
+  }
 }
 
 .features-content {
-	h2 {
-		display: inline-block;
-		position: relative;
-		padding: 0 32px 0 8px;
-		width: auto;
-		font-size: 2.4rem;
-		margin: 0;
+  h2 {
+    display: inline-block;
+    position: relative;
+    padding: 0 32px 0 8px;
+    width: auto;
+    font-size: 2.4rem;
+    margin: 0;
 
-		&::after {
-			content: '';
-			display: inline-block;
-			width: calc(100% + 12px);
-			height: 8px;
-			position: absolute;
-			bottom: -10px;
-			left: 0;
-			border-radius: 2px;
-		}
-	}
+    &::after {
+      content: '';
+      display: inline-block;
+      width: calc(100% + 12px);
+      height: 8px;
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      border-radius: 2px;
+    }
+  }
 }
 
 $color-values: rgb(43, 91, 132);
 .values {
-	background-color: $color-values;
-	color: whitesmoke;
+  background-color: $color-values;
+  color: whitesmoke;
 
-	h2::after {
-		background-color: darken($color-values, 10%);
-	}
+  h2::after {
+    background-color: darken($color-values, 10%);
+  }
 
-	.list-content {
-		@media screen and (max-width: $list-content-break) {
-			display: flex;
+  .list-content {
+    @media screen and (max-width: $list-content-break) {
+      display: flex;
 
-			.message {
-				margin-left: 16px;
+      .message {
+        margin-left: 16px;
 
-				h3 {
-					text-align: left;
-				}
-			}
-		}
-	}
+        h3 {
+          text-align: left;
+        }
+      }
+    }
+  }
 
-	.icon-wrapper {
-		display: flex;
-		justify-content: center;
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
 
-		i {
-			font-size: 5rem;
-		}
-	}
+    i {
+      font-size: 5rem;
+    }
+  }
 
-	h3 {
-		text-align: center;
-	}
+  h3 {
+    text-align: center;
+  }
 }
 
 .make-with {
-	h2::after {
-		background-color: $color-accent;
-	}
+  h2::after {
+    background-color: $color-accent;
+  }
 }
 
 $color-join: darken($color-accent, 10%);
 .join {
-	background-color: $color-join;
-	color: whitesmoke;
+  background-color: $color-join;
+  color: whitesmoke;
 
-	h2::after {
-		background-color: darken($color-join, 10%);
-	}
+  h2::after {
+    background-color: darken($color-join, 10%);
+  }
 
-	a {
-		color: lightsteelblue;
-		text-decoration: underline;
+  a {
+    color: lightsteelblue;
+    text-decoration: underline;
 
-		&:hover {
-			color: darken(lightsteelblue, 10%);
-		}
-	}
+    &:hover {
+      color: darken(lightsteelblue, 10%);
+    }
+  }
 }
 
 .contents-list {
-	margin-top: 32px;
-	display: flex;
+  margin-top: 32px;
+  display: flex;
 
-	flex-direction: row;
+  flex-direction: row;
 
-	@media screen and (max-width: $list-content-break) {
-		flex-direction: column;
+  @media screen and (max-width: $list-content-break) {
+    flex-direction: column;
 
-		.list-content {
-			margin: 8px 0 !important;
-		}
-	}
+    .list-content {
+      margin: 8px 0 !important;
+    }
+  }
 
-	.list-content {
-		background-color: rgba(black, 0.15);
-		flex: 1;
-		padding: 8px 16px;
-		margin: 0 8px;
-		border-radius: 8px;
+  .list-content {
+    background-color: rgba(black, 0.15);
+    flex: 1;
+    padding: 8px 16px;
+    margin: 0 8px;
+    border-radius: 8px;
 
-		h3 {
-			font-size: calc(1.3rem + 0.6vw);
-			font-weight: bold;
-			margin: 12px 0;
-		}
-		p {
-			margin: 0 0 8px 0;
-			font-size: 1rem;
-		}
+    h3 {
+      font-size: calc(1.3rem + 0.6vw);
+      font-weight: bold;
+      margin: 12px 0;
+    }
+    p {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+    }
 
-		&.coming-soon {
-			opacity: 0.5;
-		}
-	}
+    &.coming-soon {
+      opacity: 0.5;
+    }
+  }
 }
 
 footer.my-container {
-	padding: 0 16px;
-	background-color: #334;
-	color: whitesmoke;
+  padding: 0 16px;
+  background-color: #334;
+  color: whitesmoke;
 
-	.container-wrapper {
-		padding: 16px 0;
+  .container-wrapper {
+    padding: 16px 0;
 
-		display: flex;
-		flex-wrap: wrap;
-		@include mq-down('sm') {
-			flex-direction: column;
-		}
-	}
+    display: flex;
+    flex-wrap: wrap;
+    @include mq-down('sm') {
+      flex-direction: column;
+    }
+  }
 
-	.logo {
-		flex: 1;
+  .logo {
+    flex: 1;
 
-		h4 {
-			display: flex;
-			align-items: center;
-			font-size: 4rem;
-			font-weight: normal;
-			margin: 0 0 8px 0;
+    h4 {
+      display: flex;
+      align-items: center;
+      font-size: 4rem;
+      font-weight: normal;
+      margin: 0 0 8px 0;
 
-			.footer-icon {
-				position: relative;
-				top: 2px;
-				width: 44px;
-				height: 44px;
-				margin: auto 8px auto 0;
-			}
-		}
+      .footer-icon {
+        position: relative;
+        top: 2px;
+        width: 44px;
+        height: 44px;
+        margin: auto 8px auto 0;
+      }
+    }
 
-		.social {
-			margin: 8px 0;
+    .social {
+      margin: 8px 0;
 
-			a {
-				color: #aaa;
-				display: inline-block;
-				margin: 0 4px;
-				font-size: 1.5rem;
-			}
-		}
+      a {
+        color: #aaa;
+        display: inline-block;
+        margin: 0 4px;
+        font-size: 1.5rem;
+      }
+    }
 
-		p {
-			margin: 0;
-		}
-	}
+    p {
+      margin: 0;
+    }
+  }
 
-	.navigation {
-		width: 160px;
-		@include mq-down('sm') {
-			width: 100%;
-			margin-top: 16px;
-		}
+  .navigation {
+    width: 160px;
+    @include mq-down('sm') {
+      width: 100%;
+      margin-top: 16px;
+    }
 
-		h5 {
-			font-weight: bold;
-		}
+    h5 {
+      font-weight: bold;
+    }
 
-		& > div {
-			display: flex;
-			flex-direction: column;
-			@include mq-down('sm') {
-				flex-direction: row;
-				flex-wrap: wrap;
-			}
+    & > div {
+      display: flex;
+      flex-direction: column;
+      @include mq-down('sm') {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
 
-			a {
-				display: inline-block;
-				color: #ccc;
-				margin: 0.25rem 0;
-				@include mq-down('sm') {
-					margin: 0 0.25rem;
-				}
-			}
-		}
-	}
+      a {
+        display: inline-block;
+        color: #ccc;
+        margin: 0.25rem 0;
+        @include mq-down('sm') {
+          margin: 0 0.25rem;
+        }
+      }
+    }
+  }
 
-	.copyright {
-		width: 100%;
-		margin: 0;
-		padding-top: 16px;
-		color: #aaa;
-	}
+  .copyright {
+    width: 100%;
+    margin: 0;
+    padding-top: 16px;
+    color: #aaa;
+  }
 }
