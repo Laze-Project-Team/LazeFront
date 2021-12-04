@@ -201,8 +201,10 @@ function compile(editor: monaco.editor.IStandaloneCodeEditor) {
 }
 // == mouseとkeyboard(canvas用)
 let canvas = <HTMLCanvasElement>document.getElementById('output-canvas');
-let mouseX = 0.0;
-let mouseY = 0.0;
+let relativeMouseX = 0.0;
+let relativeMouseY = 0.0;
+let absoluteMouseX = 0.0;
+let absoluteMouseY = 0.0;
 let mousePressed = false;
 let memorySize = 0;
 let lastDownTarget: EventTarget | null;
@@ -248,43 +250,23 @@ window.onload = function () {
     false
   );
 };
-//@ts-ignore
-canvas.requestPointerLock =
-  canvas.requestPointerLock || canvas.mozRequestPointerLock;
-//@ts-ignore
-document.exitPointerLock =
-  document.exitPointerLock || document.mozExitPointerLock;
-
-canvas.onclick = function () {
-  canvas.requestPointerLock();
-};
-
-document.addEventListener('pointerlockchange', lockChangeAlert, false);
-document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
-
-function lockChangeAlert() {
-  if (
-    document.pointerLockElement === canvas ||
-    //@ts-ignore
-    document.mozPointerLockElement === canvas
-  ) {
-    console.log('The pointer lock status is now locked');
-    document.addEventListener('mousemove', updatePosition, false);
-  } else {
-    console.log('The pointer lock status is now unlocked');
-    document.removeEventListener('mousemove', updatePosition, false);
-  }
-}
 
 function updatePosition(e: MouseEvent) {
-  mouseX += e.movementX;
-  mouseY += e.movementY;
+  relativeMouseX =
+    (e.clientX - canvas.getBoundingClientRect().left - canvas.clientWidth / 2) /
+    (canvas.clientWidth / 2);
+  relativeMouseY = -(
+    (e.clientY - canvas.getBoundingClientRect().top - canvas.clientHeight / 2) /
+    (canvas.clientHeight / 2)
+  );
+  absoluteMouseX += e.movementX;
+  absoluteMouseY += e.movementY;
 }
 
 // ============ WebAssembly関係 ==========
 
 // @ts-ignore
-let memory = new WebAssembly.Memory({ initial: 17 });
+let memory = new WebAssembly.Memory({ initial: 100 });
 let gl = canvas.getContext('webgl2');
 let webglPrograms: WebGLProgram[] = [];
 //WebGLShader
@@ -292,6 +274,7 @@ let webglShaders: WebGLShader[] = [];
 //WebGLBuffer
 let webglBuffers: WebGLBuffer[] = [];
 let webglUniformLoc: WebGLUniformLocation[] = [];
+let webglTextures: WebGLTexture[] = [];
 
 function initShaderProgram(
   gl: WebGL2RenderingContext,
@@ -351,6 +334,70 @@ function loadShader(gl: WebGL2RenderingContext, type: number, source: string) {
 
   return shader;
 }
+function _loadTexture(gl: WebGL2RenderingContext, url: string) {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Because images have to be downloaded over the internet
+  // they might take a moment until they are ready.
+  // Until then put a single pixel in the texture so we can
+  // use it immediately. When the image has finished downloading
+  // we'll update the texture with the contents of the image.
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const width = 1;
+  const height = 1;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  const pixel = new Uint8Array([0, 0, 255, 255]); // opaque blue
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    level,
+    internalFormat,
+    width,
+    height,
+    border,
+    srcFormat,
+    srcType,
+    pixel
+  );
+
+  const image = new Image();
+  image.onload = function () {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      level,
+      internalFormat,
+      srcFormat,
+      srcType,
+      image
+    );
+
+    // WebGL1 has different requirements for power of 2 images
+    // vs non power of 2 images so check if the image is a
+    // power of 2 in both dimensions.
+    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+      // Yes, it's a power of 2. Generate mips.
+      gl.generateMipmap(gl.TEXTURE_2D);
+    } else {
+      // No, it's not a power of 2. Turn off mips and set
+      // wrapping to clamp to edge
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    }
+  };
+  image.src = url;
+
+  webglTextures.push(texture);
+  return webglTextures.length - 1;
+}
+
+function isPowerOf2(value) {
+  return (value & (value - 1)) == 0;
+}
 let importObject = {
   console: {
     log: function (arg: number) {
@@ -358,7 +405,7 @@ let importObject = {
       // char = char.filter(char => char != 0);
       // console.log(new TextDecoder('utf-8').decode(char));
       logConsole(`${Number(arg)}`);
-      console.log(Number(arg));
+      // console.log(Number(arg));
     },
     logstring: function (offset: number, length: number) {
       // console.log(Number(length) * 4);
@@ -367,7 +414,7 @@ let importObject = {
       bytes = bytes.filter((element) => element != 0);
       let string = new TextDecoder('utf-8').decode(bytes);
       logConsole(string);
-      console.log(string);
+      // console.log(string);
     },
     logMatrix: function (offset: number) {
       const buffer = memory.buffer.slice(offset, 128 + offset);
@@ -390,11 +437,17 @@ let importObject = {
     checkMousePress: function () {
       return BigInt(mousePressed);
     },
-    checkMouseX: function () {
-      return mouseX;
+    checkRelativeMouseX: function () {
+      return relativeMouseX;
     },
-    checkMouseY: function () {
-      return mouseY;
+    checkRelativeMouseY: function () {
+      return relativeMouseY;
+    },
+    checkAbsoluteMouseX: function () {
+      return absoluteMouseX;
+    },
+    checkAbsoluteMouseY: function () {
+      return absoluteMouseY;
     },
     rand: function () {
       return Math.random();
@@ -403,6 +456,35 @@ let importObject = {
       let temp = memorySize;
       memorySize += size;
       return temp;
+    },
+    lockPointer: function () {
+      // @ts-ignore
+      canvas.requestPointerLock =
+        canvas.requestPointerLock || canvas.mozRequestPointerLock;
+      // @ts-ignore
+      document.exitPointerLock =
+        document.exitPointerLock || document.mozExitPointerLock;
+
+      canvas.onclick = function () {
+        canvas.requestPointerLock();
+      };
+
+      document.addEventListener('pointerlockchange', lockChangeAlert, false);
+      document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+      function lockChangeAlert() {
+        if (
+          document.pointerLockElement === canvas ||
+          // @ts-ignore
+          document.mozPointerLockElement === canvas
+        ) {
+          console.log('The pointer lock status is now locked');
+          document.addEventListener('mousemove', updatePosition, false);
+        } else {
+          console.log('The pointer lock status is now unlocked');
+          document.removeEventListener('mousemove', updatePosition, false);
+        }
+      }
     },
   },
   webgl: {
@@ -417,6 +499,9 @@ let importObject = {
     },
     depthFunc: function (i: number) {
       gl!.depthFunc(i);
+    },
+    blendFunc: function (i: number, j: number) {
+      gl!.blendFunc(i, j);
     },
     enable: function (i: number) {
       gl!.enable(i);
@@ -454,6 +539,17 @@ let importObject = {
       const f64Array = new Float64Array(buffer);
       const f32Array = Float32Array.from(f64Array);
       gl!.bufferData(i, f32Array, j);
+    },
+    elementBufferData: function (
+      i: number,
+      offset: number,
+      size: number,
+      j: number
+    ) {
+      const i32Array = new Uint32Array(memory.buffer, offset, size);
+      const i16Array = Uint16Array.from(i32Array);
+      console.log(i16Array);
+      gl!.bufferData(i, i16Array, j);
     },
     useProgram: function (i: number) {
       gl!.useProgram(webglPrograms[i]);
@@ -544,6 +640,26 @@ let importObject = {
       // console.log(i);
       gl!.drawArrays(i, first, count);
     },
+    drawElements: function (
+      i: number,
+      count: number,
+      type: number,
+      offset: number
+    ) {
+      gl!.drawElements(i, count, type, offset);
+    },
+    loadTexture: function (offset: number, length: number) {
+      var bytes = new Uint8Array(memory.buffer, offset, Number(length) * 4);
+      bytes = bytes.filter((element) => element != 0);
+      var string = new TextDecoder('utf-8').decode(bytes);
+      return _loadTexture(gl!, string);
+    },
+    activeTexture: function (i: number) {
+      gl!.activeTexture(i);
+    },
+    bindTexture: function (i: number, j: number) {
+      gl!.bindTexture(i, webglTextures[j]);
+    },
   },
 };
 const vsSource = ` #version 300 es
@@ -579,7 +695,7 @@ const fsSource = ` #version 300 es
   out vec4 FragColor;
 
   void main() {
-    float ambientStrength = 0.2;
+    float ambientStrength = 1.0;
     vec3 ambient = ambientStrength * lightColor;
 
     vec3 norm = normalize(vNormal);
@@ -610,6 +726,73 @@ const lightFs = `#version 300 es
     FragColor = vec4(1.0);
   }
 `;
+const pointVs = ` #version 300 es
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+  layout (location = 0) in vec3 aVertexPosition;
+
+  uniform mat4 uProjMat;
+  uniform mat4 uModelMat;
+  uniform mat4 uViewMat;
+
+  void main() {
+    gl_Position = uProjMat * uViewMat * uModelMat * vec4(aVertexPosition, 1.0);
+    gl_PointSize = 10.0;
+  }
+`;
+const pointFs = `#version 300 es
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  uniform vec3 objectColor;
+
+  out vec4 FragColor;
+  void main(){
+    FragColor = vec4(objectColor, 1.0);
+  }
+`;
+const vsSource2DTexture = `
+  attribute vec3 aVertexPosition;
+  attribute vec2 aTexCoord;
+
+  uniform mat4 model;
+  uniform mat4 projection;
+
+  varying highp vec2 vTexCoord; 
+  void main() {
+    gl_Position = model * projection * vec4(aVertexPosition, 1.0);
+    vTexCoord = aTexCoord;
+  }
+`;
+const fsSource2DTexture = `
+  varying highp vec2 vTexCoord;
+
+  uniform sampler2D uSampler;
+
+  void main() {
+    gl_FragColor = texture2D(uSampler, vTexCoord);
+  }
+`;
+const vsSource2DNoTexture = `
+  attribute vec2 aVertexPosition;
+
+  uniform mat4 model;
+  uniform mat4 projection;
+
+  void main() {
+    gl_Position = model * projection * vec4(aVertexPosition, 0.0, 1.0);
+  }
+`;
+const fsSource2DNoTexture = `
+ uniform highp vec3 objectColor;
+ uniform highp float transparency;
+
+  void main() {
+    gl_FragColor = vec4(objectColor, transparency);
+  }
+`;
 
 let interval: any;
 
@@ -631,7 +814,9 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
         let instance = results.instance;
         initShaderProgram(gl!, vsSource, fsSource);
         initShaderProgram(gl!, vsSource, lightFs);
-        var first = performance.now();
+        initShaderProgram(gl!, pointVs, pointFs);
+        initShaderProgram(gl!, vsSource2DTexture, fsSource2DTexture);
+        initShaderProgram(gl!, vsSource2DNoTexture, fsSource2DNoTexture);
         // document.getElementById("container").textContent = instance.exports.main();
         // Set the pixel data in the module's memory
         const memorySizeFunc = instance.exports.memorySize as CallableFunction;
@@ -653,7 +838,6 @@ socket.on('compileFinished', (result: { success: boolean; wasm: string }) => {
     logConsole('compile error', 'err');
   }
 });
-// ============ WebAssembly関係 ==========
 
 // プロジェクトの作成をキャンセル
 function setNameCancel() {
