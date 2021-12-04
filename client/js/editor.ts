@@ -1546,6 +1546,7 @@ socket.on(
   'languageChanged',
   (payload: { contents: contentObject[]; language: string }) => {
     currentLanguage = payload.language;
+    updateLanguageDisplay();
     currentContents = payload.contents;
     const activeContent = payload.contents.find(
       ({ path }) => path === currentFile
@@ -1555,3 +1556,12 @@ socket.on(
     }
   }
 );
+
+$(updateLanguageDisplay);
+function updateLanguageDisplay() {
+  // @ts-ignore
+  const language = languageOptions[currentLanguage];
+  if (language) {
+    $('#language-display').text(language);
+  }
+}
