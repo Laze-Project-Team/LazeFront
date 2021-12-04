@@ -813,26 +813,17 @@ div.explorer {
 }
 
 #loading-screen {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-
   background-color: #1e1e1e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   p {
-    color: #d4d4d4;
     font-size: 2rem;
+    color: #d4d4d4;
   }
 
   .loader,
   .loader:before,
   .loader:after {
+    background-color: #1e1e1e;
     border-radius: 50%;
   }
   .loader {
@@ -850,11 +841,10 @@ div.explorer {
   .loader:after {
     position: absolute;
     content: '';
-  }
-  .loader:before {
     width: 5.2em;
     height: 10.2em;
-    background-color: #1e1e1e;
+  }
+  .loader:before {
     border-radius: 10.2em 0 0 10.2em;
     top: -0.1em;
     left: -0.1em;
@@ -862,22 +852,11 @@ div.explorer {
     animation: load2 2s infinite ease 1.5s;
   }
   .loader:after {
-    width: 5.2em;
-    height: 10.2em;
-    background-color: #1e1e1e;
     border-radius: 0 10.2em 10.2em 0;
     top: -0.1em;
     left: 4.9em;
     transform-origin: 0.1em 5.1em;
     animation: load2 2s infinite ease;
-  }
-  @-webkit-keyframes load2 {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
   @keyframes load2 {
     0% {
@@ -887,6 +866,77 @@ div.explorer {
       transform: rotate(360deg);
     }
   }
+}
+
+#converting-screen {
+  visibility: hidden;
+  background-color: rgba(black, 0.7);
+
+  p {
+    font-size: 2rem;
+    color: #d4d4d4;
+  }
+
+  .loader,
+  .loader:before,
+  .loader:after {
+    background: #ffffff;
+    -webkit-animation: load1 1s infinite ease-in-out;
+    animation: load1 1s infinite ease-in-out;
+    width: 1em;
+    height: 4em;
+  }
+  .loader {
+    color: #ffffff;
+    text-indent: -9999em;
+    margin: 88px auto;
+    position: relative;
+    font-size: 11px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+  }
+  .loader:before,
+  .loader:after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+  .loader:before {
+    left: -1.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .loader:after {
+    left: 1.5em;
+  }
+  @keyframes load1 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 0;
+      height: 4em;
+    }
+    40% {
+      box-shadow: 0 -2em;
+      height: 5em;
+    }
+  }
+}
+
+.progressive {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #contextmenu {

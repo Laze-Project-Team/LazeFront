@@ -1528,6 +1528,7 @@ function languageChange() {
         (key) => languageOptions[key] === value
       );
       if (language) {
+        $('#converting-screen').css('visibility', 'visible');
         socket.emit('languageChange', {
           currentLanguage,
           newLanguage: language,
@@ -1547,6 +1548,7 @@ socket.on(
   (payload: { contents: contentObject[]; language: string }) => {
     currentLanguage = payload.language;
     updateLanguageDisplay();
+    $('#converting-screen').css('visibility', 'hidden');
     currentContents = payload.contents;
     const activeContent = payload.contents.find(
       ({ path }) => path === currentFile
