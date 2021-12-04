@@ -295,6 +295,14 @@ div.explorer {
         border-bottom-color: mix(#d4d4d4, $color-accent, 50%);
       }
     }
+
+    .display {
+      display: flex;
+      align-items: center;
+      border-bottom: solid transparent 2px;
+      padding: 0 4px;
+      color: #aaa;
+    }
   }
 
   .editor-main {
