@@ -197,6 +197,7 @@ function compile(editor: monaco.editor.IStandaloneCodeEditor) {
   socket.emit('compile', {
     filename: currentFile,
     value: value,
+    language: currentLanguage,
   });
 }
 // == mouseとkeyboard(canvas用)
@@ -1498,7 +1499,7 @@ function updateAccount() {
   }
 }
 
-const currentLanguage = 'ja';
+let currentLanguage = 'ja';
 const languageOptions = {
   natja: '日本語（自然言語）',
   ja: '日本語（プログラミング言語）',
@@ -1535,12 +1536,16 @@ function languageChange() {
   );
 }
 
-socket.on('languageChanged', (payload: { contents: contentObject[] }) => {
-  currentContents = payload.contents;
-  const activeContent = payload.contents.find(
-    ({ path }) => path === currentFile
-  )?.content;
-  if (activeContent) {
-    editor.setValue(activeContent);
+socket.on(
+  'languageChanged',
+  (payload: { contents: contentObject[]; language: string }) => {
+    currentLanguage = payload.language;
+    currentContents = payload.contents;
+    const activeContent = payload.contents.find(
+      ({ path }) => path === currentFile
+    )?.content;
+    if (activeContent) {
+      editor.setValue(activeContent);
+    }
   }
-});
+);
