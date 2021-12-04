@@ -1523,11 +1523,17 @@ function languageChange() {
     getInitialButtonWithName('変更'),
     () => {
       const value = $('#modal-field-editor-language').val()!.toString();
-      socket.emit('languageChange', {
-        currentLanguage,
-        newLanguage: value,
-        contents: currentContents,
-      });
+      const language = Object.keys(languageOptions).find(
+        // @ts-ignore
+        (key) => languageOptions[key] === value
+      );
+      if (language) {
+        socket.emit('languageChange', {
+          currentLanguage,
+          newLanguage: language,
+          contents: currentContents,
+        });
+      }
 
       return {
         success: true,
