@@ -232,12 +232,7 @@ function updatePosition(e: MouseEvent) {
 
 // @ts-ignore
 let memory = new WebAssembly.Memory({ initial: 100 });
-let gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-
-if (!gl) {
-  logPopup('お使いのブラウザーはWebGLをサポートしていません', 'error');
-}
-
+let gl = canvas.getContext('webgl2');
 let webglPrograms: WebGLProgram[] = [];
 //WebGLShader
 let webglShaders: WebGLShader[] = [];
@@ -246,7 +241,7 @@ let webglBuffers: WebGLBuffer[] = [];
 let webglUniformLoc: WebGLUniformLocation[] = [];
 let webglTextures: WebGLTexture[] = [];
 
-function initShaderProgram(gl: WebGL2RenderingContext | WebGLRenderingContext, vsSource: string, fsSource: string) {
+function initShaderProgram(gl: WebGL2RenderingContext, vsSource: string, fsSource: string) {
   const vertexShader = loadShader(gl, gl!.VERTEX_SHADER, vsSource);
   const fragmentShader = loadShader(gl, gl!.FRAGMENT_SHADER, fsSource);
 
@@ -272,7 +267,7 @@ function initShaderProgram(gl: WebGL2RenderingContext | WebGLRenderingContext, v
 // creates a shader of the given type, uploads the source and
 // compiles it.
 //
-function loadShader(gl: WebGL2RenderingContext | WebGLRenderingContext, type: number, source: string) {
+function loadShader(gl: WebGL2RenderingContext, type: number, source: string) {
   const shader = gl.createShader(type);
 
   // Send the source to the shader object
@@ -294,7 +289,7 @@ function loadShader(gl: WebGL2RenderingContext | WebGLRenderingContext, type: nu
 
   return shader;
 }
-function _loadTexture(gl: WebGL2RenderingContext | WebGLRenderingContext, url: string) {
+function _loadTexture(gl: WebGL2RenderingContext, url: string) {
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
